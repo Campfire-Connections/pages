@@ -1,0 +1,15 @@
+{% extends "base/layout.html" %}
+{% load static %}
+{% block title_text %}Manage {% block title_text_focus %}{% endblock title_text_focus %}{% endblock %}
+
+{% block stylesheets_local %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+{% endblock stylesheets_local %}
+
+{% block content %}
+    <br /><br/><br/><br/>
+    <h1>{{ title_text }}</h1>
+    {% block cards %}
+    {% endblock cards %}
+{% endblock content %}

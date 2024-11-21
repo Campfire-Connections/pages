@@ -1,0 +1,14 @@
+<!-- auth/dashboard.html -->
+{% extends 'base/layout.html' %}
+
+{% block title_text %}Dashboard{% endblock title_text %}
+{% block stylesheets_local %}
+    {% load static %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+{% endblock stylesheets_local %}
+
+{% block content %}
+    {% block cards %}
+    {% endblock cards %}
+{% endblock content %}

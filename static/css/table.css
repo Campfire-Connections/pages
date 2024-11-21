@@ -1,0 +1,121 @@
+section.card {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#manage h2, #show h2, #list h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+#manage h2 a, #show h2 a, #list h2 a {
+    float: right;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table th {
+    background-color: #f4f4f4;
+}
+
+.actions {
+    max-width: 20px;
+}
+/* Styling for table headers */
+table thead th {
+    background-color: #003466;  /* Match the nav header background */
+    color: white;               /* Ensure the text is readable */
+    text-align: center;          /* Optional: Center align the header text */
+    padding: 10px;               /* Optional: Add some padding */
+    border-bottom: 2px solid #ffffff; /* Optional: Border for contrast */
+    font-weight: bold;
+}
+table thead th a {
+    color: white !important;
+}
+table thead th a:hover {
+    color: #ea6900 !important;
+}
+
+/* Optional: Add hover effect on table rows */
+table tbody tr:hover {
+    background-color: #f2f2f2;   /* Light grey on hover */
+}
+
+/* Optional: Style the table rows for consistent look */
+table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+/* Pagination Container */
+.pagination {
+    display: flex;
+    justify-content: center; /* Center align the pagination */
+    list-style: none; /* Remove bullets */
+    padding: 0;
+    margin: 20px 0; /* Add spacing around the pagination */
+}
+
+/* Pagination Items */
+.pagination li {
+    margin: 0 5px; /* Add spacing between items */
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 10px 15px; /* Size the clickable area */
+    text-decoration: none; /* Remove underline */
+    color: #007bff; /* Link color */
+    font-weight: bold;
+    border: 1px solid #ddd; /* Border for each item */
+    border-radius: 4px; /* Rounded corners */
+    transition: all 0.3s ease; /* Smooth hover effect */
+}
+
+/* Active Page */
+.pagination .active a {
+    background-color: #007bff; /* Active background */
+    color: white; /* White text for active item */
+    border-color: #007bff; /* Match border with background */
+}
+
+/* Hover Effect */
+.pagination a:hover {
+    background-color: #0056b3; /* Darker hover background */
+    color: white; /* White text on hover */
+    border-color: #0056b3; /* Match hover border */
+}
+
+/* Next and Previous Items */
+.pagination .next a,
+.pagination .prev a {
+    font-size: 1rem; /* Slightly larger for emphasis */
+    font-weight: bold;
+}
+
+/* Disabled State */
+.pagination .disabled a {
+    color: #aaa; /* Gray text */
+    pointer-events: none; /* Disable clicks */
+    border-color: #ddd; /* Match border */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pagination a {
+        padding: 8px 12px; /* Reduce padding for smaller screens */
+        font-size: 0.9rem; /* Slightly smaller text */
+    }
+}

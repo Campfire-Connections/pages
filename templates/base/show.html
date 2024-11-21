@@ -1,0 +1,18 @@
+<!-- pages/templates/base/layout.html -->
+{% extends 'base/layout.html' %}
+{% load static %}
+{% block title_text %}Details{% endblock title_text %}
+
+{% block stylesheets_local %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+{% endblock stylesheets_local %}
+
+{% block content %}
+    <br /><br /><br /><br />
+    <h1>{{ object.name | title }}</h1>
+    {% block cards %}
+        {% block object_details %}
+        {% endblock object_details %}
+    {% endblock cards %}
+{% endblock content %}

@@ -1,0 +1,10 @@
+<!-- partials/user_stats/faculty.html -->
+{% block user_stat_1 %}
+  {% include 'partials/user_stat.html' with url='#' url_class='count first' title=organization_labels.week_label value_class='week count' value="1" %}
+{% endblock %}
+{% block user_stat_2 %}
+  {% include 'partials/user_stat.html' with url='#' url_class='messages' title='Message' value_class='messages count' value='0' %}
+{% endblock %}
+{% block user_stat_3 %}
+  {% include 'partials/user_stat.html' with url='#' url_class='count last' title=organization_labels.faction_enrollment_label value_class='count' value='5' %}
+{% endblock %}

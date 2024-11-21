@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #87CEEB;
+    color: #8B4513;
+}
+
+
+.hero {
+    background-image: url("../../static/images/splash/hero.png");
+    background-size: cover;
+    /*background-position: center;*/
+    text-align: center;
+    padding: 100px 20px;
+    color: #FFFFFF;
+}
+.hero h1 {
+    font-size: 3em;
+    color: #003366;
+}
+.hero p {
+    font-size: 1.5em;
+    color: #228b22;
+}
+.hero .cta {
+    margin-top: 20px;
+}
+
+.hero .cta a {
+    color: #FFFFFF;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 0 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.hero .cta a.primary,
+.hero .cta a.primary:active {
+    background-color: #FF4500;
+}
+
+.hero .cta a.primary:hover {
+   background-color: #FF6347; 
+}
+
+.hero .cta a.secondary,
+.hero .cta a.secondary:active {
+    background-color: #228b22;
+}
+
+.hero .cta a.secondary:hover {
+    background-color: #508f4f;
+}
+
+.hero .cta a:hover {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hero .cta a:active {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.features {
+    padding: 50px 20px;
+    text-align: center;
+}
+.features h2 {
+    margin-bottom: 20px;
+}
+.features .feature {
+    display: inline-block;
+    width: 200px;
+    margin: 10px;
+}
+.features .feature img {
+    width: 50px;
+    height: 50px;
+}
+.testimonials {
+    background-color: #003366;
+    color: #FFFFFF;
+    padding: 50px 20px;
+    text-align: center;
+}
+.testimonials blockquote {
+    margin: 20px auto;
+    width: 60%;
+    font-style: italic;
+}

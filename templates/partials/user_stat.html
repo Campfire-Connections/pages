@@ -1,0 +1,6 @@
+<!-- partials/user_stat.html -->
+{% load my_filters %}
+<a href="{{ url }}" class="{{ url_class }}">
+    <span>{% pluralize_word title True %}</span>
+    <span class="{{ value_class }}">{{ value }}</span>
+</a>

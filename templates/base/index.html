@@ -1,0 +1,16 @@
+{% extends 'base/layout.html' %}
+
+{% block title_text %}{{ 'Index' }}{% endblock title_text %}
+
+
+{% block content %}
+    <h1>{{ 'Index' }}</h1>
+
+    {% if object_list %}
+        
+    {% else %}
+        <p>No items available.</p>
+    {% endif %}
+
+    <a href="{% url create_url_name %}" class="btn btn-success">Create New</a>
+{% endblock %}
