@@ -11,7 +11,7 @@ from django.views.generic import (
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import redirect
-from django_tables2 import SingleTableView
+from django_tables2 import SingleTableView,RequestConfig
 
 from ..mixins.views import FormMessagesMixin
 
@@ -312,47 +312,89 @@ class BaseDeleteView(DeleteView):
             return redirect(self.get_success_url())
 
 
-class BaseManageView(BaseTemplateView):
+class BaseManageView(TemplateView):
     """
-    Base class for management views that extends the functionality of template views. This class
-    provides a mechanism to include related objects in the context data, allowing for easier
-    management of related models.
+    Base class for managing views that display multiple tables with associated data. This class 
+    extends TemplateView to provide functionality for initializing tables, retrieving their data, 
+    and rendering them in the specified template.
 
     Attributes:
-        related_model (type): The model class related to the view.
-        related_queryset (QuerySet): The queryset of related objects to be included in the context.
+        template_name (str): The name of the template used to render the view.
+        tables (dict): A dictionary mapping table names to their corresponding table classes.
+        table_data (dict): A dictionary mapping table names to their respective data querysets.
 
     Methods:
-        get_context_data(**kwargs): Returns the context data, including related objects if
-            specified.
+        get_tables(): Initializes and configures the tables based on the defined table classes and 
+            their data.
+        get_table_data(table_name): Retrieves the data for a specified table based on its name.
+        get_context_data(**kwargs): Returns the context data, including the initialized tables for 
+        rendering.
 
     Args:
         self: The instance of the class.
         **kwargs: Additional keyword arguments to pass to the superclass method.
 
     Returns:
-        dict: A dictionary containing the context data, including related objects if applicable.
+        dict: A dictionary containing the context data, including the initialized tables.
     """
 
-    related_model = None
-    related_queryset = None
+    template_name = "base/manage.html"
+    tables = {}  # Define tables in the form {'table_name': TableClass}
+    table_data = {}  # Data to populate tables in the form {'table_name': queryset}
 
-    def get_context_data(self, **kwargs):
+    def get_tables(self):
         """
-        Retrieves and returns the context data for the template, including related objects if
-        specified. This method enhances the context by adding a queryset of related objects,
-        allowing for better management and display of related data in the view.
+        Initializes and configures the tables defined in the `tables` attribute. This method 
+        retrieves the data for each table, creates an instance of the corresponding table class,
+        and applies request-specific configurations before returning the initialized tables.
 
         Args:
             self: The instance of the class.
-            **kwargs: Additional keyword arguments to pass to the superclass method.
 
         Returns:
-            dict: A dictionary containing the context data, including related objects if
-                applicable.
+            dict: A dictionary containing the initialized tables, keyed by their names.
+        """
+
+        initialized_tables = {}
+        for table_name, table_class in self.tables.items():
+            data = self.get_table_data(table_name)
+            table = table_class(data, request=self.request)
+            RequestConfig(self.request).configure(table)
+            initialized_tables[table_name] = table
+        return initialized_tables
+
+    def get_table_data(self, table_name):
+        """
+        Retrieves the data for a specified table based on its name. This method looks up the table
+        name in the `table_data` attribute and returns the corresponding data, defaulting to an 
+        empty list if the table name is not found.
+
+        Args:
+            self: The instance of the class.
+            table_name (str): The name of the table for which to retrieve data.
+
+        Returns:
+            list: The data associated with the specified table name, or an empty list if no data is 
+            found.
+        """
+
+        return self.table_data.get(table_name, [])
+
+    def get_context_data(self, **kwargs):
+        """
+        Retrieves the data for a specified table based on its name. This method looks up the table 
+        name in the `table_data` attribute and returns the corresponding data, defaulting to an 
+        empty list if the table name is not found.
+
+        Args:
+            self: The instance of the class.
+            table_name (str): The name of the table for which to retrieve data.
+
+        Returns:
+            list: The data associated with the specified table name, or an empty list if no data is
+                found.
         """
 
         context = super().get_context_data(**kwargs)
-        if self.related_model and self.related_queryset:
-            context["related_objects"] = self.related_queryset
+        context["tables"] = self.get_tables()
         return context
