@@ -1,1 +1,1 @@
-# pages/models.py
+# core/models.py

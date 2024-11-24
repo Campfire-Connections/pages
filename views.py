@@ -1,4 +1,4 @@
-# pages/views.py
+# core/views.py
 
 from django.apps import apps
 from django.http import HttpResponse, JsonResponse
@@ -6,8 +6,8 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-from .models.messaging import Message, Notification
-from .models.dashboard import DashboardLayout
+from core.models.messaging import Message, Notification
+from core.models.dashboard import DashboardLayout
 from .forms import MessageForm
 
 

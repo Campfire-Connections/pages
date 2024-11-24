@@ -8,20 +8,20 @@ from . import views
 
 urlpatterns = [
     # Messaging & Notification
-    path("inbox/", views.inbox, name="inbox"),
-    path("sent/", views.sent_messages, name="sent_messages"),
-    path("send/", views.send_message, name="send_message"),
-    path("notifications/", views.notifications, name="notifications"),
-    path(
-        "messages/read/<int:message_id>/",
-        views.mark_message_as_read,
-        name="mark_message_as_read",
-    ),
-    path(
-        "notifications/read/<int:notification_id>/",
-        views.mark_notification_as_read,
-        name="mark_notification_as_read",
-    ),
+    # path("inbox/", views.inbox, name="inbox"),
+    # path("sent/", views.sent_messages, name="sent_messages"),
+    # path("send/", views.send_message, name="send_message"),
+    # path("notifications/", views.notifications, name="notifications"),
+    # path(
+    #     "messages/read/<int:message_id>/",
+    #     views.mark_message_as_read,
+    #     name="mark_message_as_read",
+    # ),
+    # path(
+    #     "notifications/read/<int:notification_id>/",
+    #     views.mark_notification_as_read,
+    #     name="mark_notification_as_read",
+    # ),
     # Landing Page
     path("", views.index, name="index"),
     path("", views.index, name="home"),
