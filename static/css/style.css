@@ -421,7 +421,8 @@ section.top_row section.active_enrollment {
 .sidebar {
   margin-top: 14px;
   float: left;
-  width: 246px;
+  min-width: 246px;
+  max-width: 260px;
   margin-bottom: 5px;
   background-color: #efefef;
   -moz-border-radius: 4px;
@@ -455,8 +456,8 @@ section.top_row section.active_enrollment {
   float: left;
   margin-right: 0;
   display: block;
-  width: 80px;
-  padding: 12px 0 15px;
+  min-width: 80px;
+  padding: 12px 1px 15px;
   border-left: 1px solid white;
   background-color: #efefef;
   background: -webkit-gradient(

@@ -1,0 +1,39 @@
+<!-- templates/base/header.html //-->
+{% load static %}
+<header>
+{% block header %}
+    {% block logo %}
+    <div class="logo">
+        <a href="{% url 'home' %}">
+            <img src="{% static 'images/logo_text_white.png' %}" alt="Campfire Connections Logo" class="logo">
+        </a>
+    </div>
+    {% endblock logo %}
+
+    {% block menu_wrapper %}
+    <nav>
+        {% block menu %}
+        {% load menu_tags %}
+        {% render_menu menu_items %}
+        {% endblock menu %}
+    </nav>
+    {% endblock menu_wrapper %}
+
+    {% if user.is_authenticated %}
+        {% block toplinks %}
+        <nav>
+        {% include 'partials/top_links.html' %}
+        </nav>
+        {% endblock toplinks %}
+    {% else %}
+        {% block auth_buttons_wrapper %}
+        <div class="auth-buttons">
+        {% block auth_buttons %}
+            <a href="{% url 'login'  %}" class="btn login">Log In</a>
+            <a href="{% url 'signup'  %}" class="btn signup">Sign Up</a>
+        {% endblock auth_buttons%}
+        </div>
+        {% endblock auth_buttons_wrapper %}
+    {% endif %}
+{% endblock header %}
+</header>

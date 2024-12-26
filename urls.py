@@ -45,6 +45,6 @@ urlpatterns = [
     ),
     path("save-layout/", views.save_layout, name="save_layout"),
     # Misc
-    path("reports/", views.ReportView.as_view(), name="reports"),
+    #path("reports/", views.ReportView.as_view(), name="reports"),
     path("resources/", views.ResourceView.as_view(), name="resources"),
 ]

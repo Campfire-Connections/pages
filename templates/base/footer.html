@@ -1,0 +1,17 @@
+<!-- templates/base/footer.html //-->
+{% load static %}
+
+<footer>
+{% block footer %}
+
+<p>&copy; {% now "Y" %} Campfire Connections. All Rights Reserved.</p>
+<nav>
+    <ul>
+    <li><a href="#">Privacy Policy</a></li>
+    <li><a href="#">Terms of Service</a></li>
+    <li><a href="#">Contact</a></li>
+    </ul>
+</nav>
+
+{% endblock footer %}
+</footer>

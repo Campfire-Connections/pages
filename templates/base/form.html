@@ -1,4 +1,10 @@
 {% extends 'base/layout.html' %}
+{% load static %}
+
+{% block stylesheets_local %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+{% endblock stylesheets_local %}
 
 {% block title_text %}{{ title|default:'Form' }}{% endblock title_text %}
 

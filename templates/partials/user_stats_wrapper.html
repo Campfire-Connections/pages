@@ -1,0 +1,8 @@
+<!-- partials/user_stats/wrapper.html //-->
+<div class="sidebar">
+    <div class="custom-ui-stats user-stats module clearfix">
+        {% if user.is_authenticated %}
+            {% include "partials/user_stats.html" %}
+        {% endif %}
+    </div>
+</div>

@@ -1,14 +1,6 @@
 <!-- partials/user_stats.html -->
 {% block user_stats_wrapper %}
-<div class="sidebar">
-    <div class="custom-ui-stats user-stats module clearfix">
-        {% block user_stats %}
-        {% if user.is_authenticated %}
-            {% with template_path="partials/userstats/"|add:user.user_type|add:".html" %}
-                {% include template_path %}
-            {% endwith %}
-        {% endif %}
-        {% endblock user_stats %}
-    </div>
-</div>
+    {% for title, url, value, url_class, value_class in info_row_data %}
+        {% include 'partials/user_stat.html' with title=title url=url value=value url_class=url_class value_class=value_class %}
+    {% endfor %}
 {% endblock user_stats_wrapper %}
