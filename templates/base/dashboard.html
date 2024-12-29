@@ -1,0 +1,45 @@
+{% extends "base/layout.html" %}
+{% load render_table from django_tables2 %}
+{% load string_filters %}
+
+{% block content %}
+<br /><br/><br/><br/>
+<div class="dashboard-container">
+    <h1>Dashboard</h1>
+    <div id="dashboard-widgets" class="dashboard-widgets cards">
+        {% for widget in widgets %}
+            <section class="dashboard-widget card">
+                <h2> {{ widget.name|underscore_to_space|title }} 
+                    <a href="{{ widget.create_url }}">
+                    {% if item.icon %}
+                        <i class="fas {{ item.icon }}"></i>
+                    {% else %}
+                        <i class="fas fa-plus"></i>
+                    {% endif %}
+                    </a>
+                </h2>
+                {% if widget.table %}
+                    {% render_table widget.table %}
+                {% else %}
+                    <p>No data available.</p>
+                {% endif %}
+            </section>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Include JavaScript for drag-and-drop -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script>
+    // Initialize drag-and-drop sorting for widgets
+    const container = document.getElementById("dashboard-widgets");
+    Sortable.create(container, {
+        animation: 150,
+        onEnd: function (evt) {
+            // Save the new widget order (e.g., via AJAX)
+            const orderedWidgets = Array.from(container.children).map(widget => widget.dataset.widget);
+            console.log("New widget order:", orderedWidgets);
+        }
+    });
+</script>
+{% endblock %}
