@@ -5,14 +5,123 @@
 
 {% block stylesheets_local %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/show.css' %}">
 {% endblock stylesheets_local %}
 
 {% block content %}
-    <br /><br /><br /><br />
-    <h1>{{ object.name | title }}</h1>
-    {% block cards %}
-        {% block object_details %}
-        {% endblock object_details %}
-    {% endblock cards %}
+    <div class="card object">
+        <div class="card-header">
+            {% block card_header %}
+            <div style="margin-bottom: 30px">
+                <div id="objectHeader" style="display: flex !important;">
+                    <div style="margin-right: 4px">
+                        <h1>
+                            <span class="object-identifier">
+                                {% block object_identifier %}{{ object.pk | title }}{% endblock object_identifier %}
+                            </span>
+                        </h1>
+                    </div>
+                    <div style="flex-grow: 1 !important;">
+                        <div style="float: right; display: flex !important; margin-left: 30px;">
+                            <div style="margin-right: .25rem !important;">
+                                <div style="display: flex !important;">
+                                    <div class="btn-group" role="group"></div>
+                                </div>
+                            </div>
+                            <div style="margin: 0 15px">
+                                <button id="srAddCommentButton" class="add-comment btn btn-secondary" title="Add Comment">
+                                    <span class="fa fa-fw fa-comment fa-alignment-fix comment-icon-color"></span>
+                                </button>
+                                <button type="button" id="srPrintButton" class="print btn btn-secondary" title="Print">
+                                    <span class="fa fa-fw fa-print"></span>
+                                </button>
+                            </div>
+                            <div id="objectMoreActionsButtonMenu" class="dropdown" style="display: inline-block">
+                                    <button id="objectMoreActionsButton" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="fas fa-fw fa-bars"></span>
+                                        Actions
+                                    </button>
+                                <div class="dropdown-menu dropdown-menu-right" style="">
+                                        <a href="#" class="dropdown-item change-status">
+                                            <span class="fas fa-fw fa-check-circle status-change-icon-color"></span>
+                                            Change Status
+                                        </a>
+                                        <a href="#" class="dropdown-item add-comment">
+                                            <span class="fas fa-fw fa-comment fa-alignment-fix comment-icon-color"></span>
+                                            Add Comment
+                                        </a>
+                                        <a id="srHeader_lnkAddAssignment" class="dropdown-item sr-assignment-assign-button" data-srid="82730">
+                                            <span class="fas fa-fw fa-arrow-right assignment-icon-color"></span>
+                                            Assign Faculty
+                                        </a>
+                                        <div role="separator" class="dropdown-divider"></div>
+                                        <a href="#" class="dropdown-item print">
+                                            <span class="fas fa-fw fa-print lm1"></span> 
+                                            Print
+                                        </a>
+                                        <a href="#" class="dropdown-item">
+                                            <span class="fas fa-fw fa-envelope"></span> 
+                                            Email Customer
+                                        </a>
+                                        <div role="separator" class="dropdown-divider"></div>
+                                        <a href="#" class="dropdown-item">
+                                            <span class="fas fa-fw fa-copy"></span> 
+                                            Clone
+                                        </a>
+                                        <a href="#" class="dropdown-item">
+                                            <span class="fas fa-fw fa-edit"></span> 
+                                            Edit
+                                        </a>
+                                </div>
+                            </div>
+                        </div>
+                        <h1>{% block object_name %}{{ object.name | title }}{% endblock object_name %}</h1><br>
+                        <h2>{% block object_details %}<br>{% endblock object_details %}</h2>
+                        <div style="display: flex !important; font-size: 11px; color: #999; margin-top: 15px;">
+                            <div>
+                                <strong>Created: </strong>
+                                <span title="Created by {{object.created_by}}">{{object.created_at}}</span>
+                            </div>
+                            <div style="margin-left: 20px;">
+                                <strong>Other Detail </strong>blah
+                            </div>
+                            <div style="margin-left: 20px;">
+                                <strong>Other Detail: </strong>blah blah
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock card_header %}
+
+            {% block object_nav_tabs_wrapper %}
+            <div id="objectTabBar" class="objectNav">
+                <ul class="nav nav-tabs nav-bordered">
+                    {% block object_nav_tabs %}
+                    {% block object_nav_tab_overview %}
+                    <li class="nav-item" role="presentation">
+                        <a href="#" id="tabs_tabOverview" class="nav-link active">Overview</a>
+                    </li>
+                    {% endblock object_nav_tab_overview %}
+                    <li class="nav-item" role="presentation">
+                        <a href="#" id="tabs_tabItems" class="nav-link">Items</a>
+                    </li>
+                    {% endblock object_nav_tabs %}
+                </ul>
+            </div>
+            {% endblock object_nav_tabs_wrapper %}
+        </div>
+        <div style="display: flex !important;">
+            <div style="flex-grow: 1 !important">
+                <div class="card-body">
+                    <h2 class="no-border card-title section-title">Detailed Description</h2>
+                    <div id="notes" class="field-value" style="width: 100%; overflow: hidden; word-break: break-word;">
+                        <span id="objectDetailedDescription" class="readmore" style="max-height: none;">
+                            {{ object.description }}
+                        </span>&nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

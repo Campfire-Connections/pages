@@ -1,0 +1,84 @@
+/*
+    The following colors are the colors that differ from theme-to-theme.
+    
+        header background:          #D95700
+        tab background:             #E17933
+        tab background (hover):     #E48A4D
+        light background:           #EEEEEE
+        section header gradient 1:  #EB8A4D
+        section header gradient 2:  #E17933
+        section header text:        #D95700
+        shortcut bar:               #E17933
+
+*/
+
+/* navigation tabs */
+.main-navbar { 
+    background-color:#DA6221; 
+    border-color:#D95700; 
+    color:#ffffff; 
+}
+    .main-navbar .navbar-nav .nav-link { 
+        color:#ffffff; 
+    }
+    .main-navbar .navbar-nav > .nav-item > .nav-link:hover,
+    .main-navbar .navbar-nav > .nav-item > .nav-link:active,
+    .main-navbar .navbar-nav > .nav-item > .nav-link:focus,
+    .main-navbar .navbar-nav > .nav-item > .nav-link.hover {
+        /* hover state */
+        background-color: rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+    }
+    .main-navbar .navbar-nav > .nav-item.show > .nav-link,
+    .main-navbar .navbar-nav > .nav-item.show > .nav-link:hover,
+    .main-navbar .navbar-nav > .nav-item.show > .nav-link:active, 
+    .main-navbar .navbar-nav > .nav-item.show > .nav-link:focus,
+    .main-navbar .navbar-nav > .nav-item.show:not(.active) .nav-link:active, 
+    .main-navbar .navbar-nav > .nav-item.show:not(.active) .nav-link:focus { 
+        /* "Open" tab (but not "Active") */
+        background-color:rgba(0, 0, 0, 0.2); 
+        color:#ffffff;
+    }
+    .main-navbar .navbar-nav > .nav-item.active > .nav-link,
+    .main-navbar .navbar-nav > .nav-item.active > .nav-link:hover,
+    .main-navbar .navbar-nav > .nav-item.active > .nav-link:active, 
+    .main-navbar .navbar-nav > .nav-item.active > .nav-link:focus {
+        /* "Active" tab */
+        background-color:rgba(255, 255, 255, 0.2); 
+        color:#ffffff;
+    }
+    .main-navbar button.navbar-toggler { 
+        color:#ffffff; 
+    }
+    .main-navbar button.navbar-toggler:hover,
+    .main-navbar button.navbar-toggler:focus,
+    .main-navbar button.navbar-toggler:active { 
+        background-color:rgba(255, 255, 255, 0.2); color:#ffffff; 
+    }
+
+
+.searchResults { background-color:#ebf2fc; border-color:#cccccc; }
+.SearchResultsLabel { color:#CC6600; }
+
+#schedTabContainer ul.subtabs li a.active, 
+    #schedTabContainer ul.subtabs li a:link.active, 
+    #schedTabContainer ul.subtabs li a:visited.active { background-color:#eeeeee; border-bottom-color:#eeeeee; }
+
+.gridHeader a { color:white; }
+.gridHeaderSep { color:#d1d1d1; }
+table.grid tr.gridFlash td { background-color:#C4E69F; }
+table.grid tr.rowSelected td { background-color:#ffffcc; }
+
+input.tourButton { background-color:#cc6600; border-color:black; color:white; }
+
+.object .section h2, .object h2.section-title { color:#D95700; }
+.objectContent h1 { color:#D95700; }
+.objectContent .section h2 { color:#D95700; }
+.settingsContainer .section h2 { border-color:#ccc; color:#D95700; }
+.settingsContainer .section h2 a { }
+
+.ReportTableHeaderRow { background-color:#E17933; color:#ffffff !important; }
+.ReportTableHeaderRow a { color:#ffffff !important; }
+
+.shortcutBar { background-color:#E17933; }
+#srSidebar h1 { color:#D95700; }

@@ -1,0 +1,161 @@
+<!-- partials/nav.html // -->
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark main-navbar">
+    <button id="mainNavbarMenuButton" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar-collapse-1" aria-controls="main-navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="main-navbar-collapse-1">
+        <div class="navbar-nav">
+
+        {% block main_nav %}
+        <!-- DASHBOARD TAB -->
+        <div id="dashboardMenu" class="nav-item icon-only-tab active">
+            <a class="nav-link" href="{% url 'dashboard' %}" title="Dashboard"><span class="fas fa-fire tab-icon"></span><span class="tab-text">Dashboard</span></a>
+        </div>
+
+        <!-- FACILITY MGMT TAB -->
+        <div id="facilityMgmtMenu" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-facility-mgmt" role="button" aria-haspopup="true" aria-expanded="false">
+                {{organization_labels.facility_label | title}} Mgmt
+                <i class="fas fa-chevron-down lm5"></i>
+            </a>
+            <div class="dropdown-menu main-nav-dropdown">
+                <a class="dropdown-item" href="{% url 'facilities:facultys:new' facility_slug=user.facultyprofile_profile.facility.slug %}">
+                    <span class="fas fa-plus-square fa-fw"></span>
+                    New {{organization_labels.faculty_label | title}}
+                </a>
+                <a class="dropdown-item" href="{% url 'facilities:departments:new' facility_slug=user.facultyprofile_profile.facility.slug %}">
+                    <span class="fas fa-plus-square fa-fw"></span>
+                    New Department
+                </a>
+                <a class="dropdown-item" href="{% url 'facilities:quarters:new' facility_slug=user.facultyprofile_profile.facility.slug %}">
+                    <span class="fas fa-plus-square fa-fw"></span>
+                    New {{organization_labels.quarters_label | default:'quarters'|title}}
+                </a>
+                <div role="separator" class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'facilities:facultys:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-th-list fa-fw"></span>{{organization_labels.faculty_label | title}}</a>
+                <a class="dropdown-item" href="{% url 'facilities:departments:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-th-list fa-fw"></span>Departments</a>
+                <a class="dropdown-item" href="{% url 'facilities:quarters:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-th-list fa-fw"></span>{{organization_labels.quarters_label | default:'quarters'|title}}</a>
+                <div role="separator" class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'facilities:enrollments:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-calendar-week fa-fw"></span>{{organization_labels.facility_enrollment_label | title}}s</a>
+            </div>
+        </div>
+
+        <!-- COURSE MGMT TAB //-->
+        <div id="courseMgmtMenu" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-course-mgmt" role="button" aria-haspopup="true" aria-expanded="false">
+                Course Mgmt
+                <i class="fas fa-chevron-down lm5"></i>
+            </a>
+            <div class="dropdown-menu main-nav-dropdown">
+                <a class="dropdown-item" href="{% url 'courses:new' %}">
+                    <span class="fas fa-plus-square fa-fw"></span>
+                    New Course
+                </a>
+                <a class="dropdown-item" href="{% url 'facilities:classes:new' facility_slug=user.facultyprofile_profile.facility.slug %}">
+                    <span class="fas fa-plus-square fa-fw"></span>
+                    New Class
+                </a>
+                <div role="separator" class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'facilities:courses:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-th-list fa-fw"></span>Courses</a>
+                <a class="dropdown-item" href="{% url 'facilities:classes:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-th-list fa-fw"></span>Classes</a>
+            </div>
+        </div>
+
+        <!-- MY ENROLLMENTS TAB //-->
+        <div id="myEnrollmentsMenu" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-my_enrollments" role="button" aria-haspopup="true" aria-expanded="false">
+                My Enrollments
+                <i class="fas fa-chevron-down lm5"></i>
+            </a>
+            <div class="dropdown-menu main-nav-dropdown">
+                <a class="dropdown-item" href="#">
+                    <span class="fas fa-plus-square fa-fw"></span>
+                    New Enrollment
+                </a>
+                <div role="separator" class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'facilities:enrollments:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-calendar-week fa-fw"></span>{{organization_labels.facility_enrollment_label | title}}s</a>
+            </div>
+        </div>
+    {% endblock main_nav %}
+
+    </div>
+    <div class="navbar-nav main-navbar-right float-end">
+ 
+        <!-- SEARCH TAB //-->
+        <div class="nav-item">
+            <div class="my-3 mr-2">
+                <div class="input-group">
+                    <input type="search" id="txtGlobalSearch" class="form-control" placeholder="Search for..." cols="15" autocomplete="off">
+                    <div id="txtGlobalSearchInfo" class="input-group-text" data-bs-toggle="tooltip" data-bs-html="true" title="<div class='text-left' style='font-size:80%;'><div class='mt-0 mb-3'>Find items that <strong><i>start with</i></strong> the text entered.</div><div><p class='mt-0 mb-0'>Items searched:</p><ul class='list-unstyled mb-3'><li>- Customers</li><li>- Contacts</li><li>- Locations</li><li>- Service Requests</li><li>- Equipment</li></ul><p class='mb-0'>Note: Only the first 10 matching items of each type will be shown.</p></div></div>">
+                        <span id="searchInfoIcon" class="fa fa-info-circle fa-fw mt-1"></span>
+                        <span id="searchLoadingIcon" class="fa fa-spinner fa-spin fa-fw"></span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- BOOKMARKS ICON -->
+        <div class="nav-item dropdown icon-only-tab bookmark-tab d-none d-md-block">
+            <a href="#" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" title="Bookmarks">
+                <span class="tab-icon fas fa-bookmark fa-fw" style="line-height:20px;"></span><span class="tab-text"> Bookmarks</span>
+            </a>
+            <div class="dropdown-menu" id="bookmarks-menu">
+                <a class="dropdown-item" href="#" id="add-bookmark"><span class="fas fa-bookmark fa-fw mr-1" style="color:#15b508;"></span> Bookmark This Page</a>
+                <div role="separator" class="dropdown-divider"></div>
+                <h6 class="dropdown-header">Saved Bookmarks</h6>
+                
+                        <a id="no-bookmarks"  class="dropdown-item disabled">You don't have any bookmarks.</a>
+                        
+            </div>
+        </div>
+
+        <div style="height:30px; margin:18px 7px; border-left:solid 1px #eee;" class="d-none d-lg-block"></div>
+
+        <!-- ORGANIZATION / FACTION -->
+        <div id="appTitleMenu" class="nav-item dropdown current-user-menu d-none d-lg-block">
+            <a href="{% url 'organization_show' organization_slug=user.facultyprofile_profile.organization.slug %}" class="nav-link app-title " onclick="return false;">
+                {{ user.facultyprofile_profile.organization}}
+            </a>
+        </div>
+
+        <div style="height:30px; margin:18px 7px; border-left:solid 1px #eee;" class="d-none d-lg-block"></div>
+
+        <!-- USER MENU -->
+        <div class="nav-item dropdown current-user-menu">
+            <a id="user-avatar-tab" href="#" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-beamer-click=”false”>
+                <div style="display:table-row;">
+                    <div class="user-avatar" style="display:table-cell; width:30px; height:48px;">
+                        
+                                <img src="{% static 'images/avatar/default.png' %}" style="height:30px; width:30px; margin-top:9px;" />
+                        
+                    </div>
+                </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-item" style="padding-top:10px; padding-bottom:10px;">
+                    <div class="d-flex">
+                        <div class="user-avatar" style="width:40px;">
+                            
+                                    <img src="{% static 'images/avatar/default.png' %}" style="height:30px; width:30px;" />
+                            
+                        </div>
+                        <div class="user-display-name" style="vertical-align:top; width:140px;">
+                            <div><strong>{{ user.first_name | title }} {{ user.last_name | title}}</strong></div>
+                            
+                            <div><a class="small" href="{% url 'account_settings' %}">Edit Profile &amp; Preferences</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown-item">
+                    <hr style="margin:5px 0;" />
+                </div>
+                <a class="dropdown-item" id="settings" href="{% url 'account_settings' %}"><i class="fas fa-cog fa-fw"></i> Settings</a>
+                <a class="dropdown-item" id="beamer-icon" href="#"><i class="fa fa-envelope fa-fw"></i> Notifications</a>
+                <a class="dropdown-item" href="#"><i class="fa fa-question-circle fa-fw"></i> Help</a>
+                <a class="dropdown-item" id="logout" href="{% url 'logout' %}"><span class="fa fa-sign-out fa-fw"></span> Log Out</a>
+                
+            </div>
+        </div>
+    </div>
+  </div>
+</nav>

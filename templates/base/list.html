@@ -1,22 +1,37 @@
 {% extends 'base/layout.html' %}
+{% load static %}
+{% load render_table from django_tables2 %}
+{% block title_text %}Objects{% endblock title_text %}
 
-{% block title_text %}{% endblock title_text %}
+{% block stylesheets_local %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+{% endblock stylesheets_local %}
 
 {% block content %}
-<br><br><br><br>
-    <div class="container">
-    {% block content_heading %}
-        <h1>{% block content_header_text %}{% endblock content_header_text %}</h1>
-    {% endblock content_heading %}
-
-    {% block content_content %}
-        {{ table }}
-        {% block content_footer %}
-            {% block content_footer_text %}
-        <a href="{% url 'home' %}">Back Home</a>
-            {% endblock content_footer_text %}
-        {% endblock content_footer %}
-        
-    {% endblock content_content%}
+<div class="bodyHeader">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1>
+                <span id="lblPageTitle">{% block objects_title %}Objects{% endblock objects_title %}</span>
+            </h1>
+        </div>
+        <div>
+            <a class="btn btn-secondary" href="{% block new_url %}new{% endblock new_url %}">
+                <span class="fas fa-fw fa-plus-square" style="color:#15b508;"></span>
+                New {% block object_type %}Object{% endblock object_type %}
+            </a>
+        </div>
     </div>
+</div>
+
+<div class="body-content">
+    <span id="lblErrorMessage"></span>
+    {% if table %}
+        {% render_table table %}
+    {% else %}
+        <p>No data available to display.</p>
+    {% endif %}
+</div>
 {% endblock content %}

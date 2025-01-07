@@ -1,0 +1,359 @@
+.card {
+  margin: 20px !important;
+  padding: 0 !important;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+}
+
+.card > hr {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.card > .list-group {
+  border-top: inherit;
+  border-bottom: inherit;
+}
+
+.card > .list-group:first-child {
+  border-top-width: 0;
+  border-top-left-radius: calc(0.25rem - 1px);
+  border-top-right-radius: calc(0.25rem - 1px);
+}
+
+.card > .list-group:last-child {
+  border-bottom-width: 0;
+  border-bottom-right-radius: calc(0.25rem - 1px);
+  border-bottom-left-radius: calc(0.25rem - 1px);
+}
+
+.card > .card-header + .list-group,
+.card > .list-group + .card-footer {
+  border-top: 0;
+}
+
+.card-body {
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1.25rem;
+}
+
+.card-title {
+  margin-bottom: 0.75rem;
+}
+
+.card-subtitle {
+  margin-top: -0.375rem;
+  margin-bottom: 0;
+}
+
+.card-text:last-child {
+  margin-bottom: 0;
+}
+
+.card-link:hover {
+  text-decoration: none;
+}
+
+.card-link + .card-link {
+  margin-left: 1.25rem;
+}
+
+.card-header {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header:first-child {
+  border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+}
+
+.card-footer {
+  padding: 0.75rem 1.25rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-footer:last-child {
+  border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+}
+
+.card-header-tabs {
+  margin-right: -0.625rem;
+  margin-bottom: -0.75rem;
+  margin-left: -0.625rem;
+  border-bottom: 0;
+}
+
+.card-header-pills {
+  margin-right: -0.625rem;
+  margin-left: -0.625rem;
+}
+
+.card-img-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1.25rem;
+  border-radius: calc(0.25rem - 1px);
+}
+
+.card-img,
+.card-img-bottom,
+.card-img-top {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.card-img,
+.card-img-top {
+  border-top-left-radius: calc(0.25rem - 1px);
+  border-top-right-radius: calc(0.25rem - 1px);
+}
+
+.card-img,
+.card-img-bottom {
+  border-bottom-right-radius: calc(0.25rem - 1px);
+  border-bottom-left-radius: calc(0.25rem - 1px);
+}
+
+.card-deck .card {
+  margin-bottom: 15px;
+}
+
+@media (min-width: 576px) {
+  .card-deck {
+    display: flex;
+    flex-flow: row wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+
+  .card-deck .card {
+    flex: 1 0 0%;
+    margin-right: 15px;
+    margin-bottom: 0;
+    margin-left: 15px;
+  }
+}
+
+.card-group > .card {
+  margin-bottom: 15px;
+}
+
+@media (min-width: 576px) {
+  .card-group {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  .card-group > .card {
+    flex: 1 0 0%;
+    margin-bottom: 0;
+  }
+
+  .card-group > .card + .card {
+    margin-left: 0;
+    border-left: 0;
+  }
+
+  .card-group > .card:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .card-group > .card:not(:last-child) .card-header,
+  .card-group > .card:not(:last-child) .card-img-top {
+    border-top-right-radius: 0;
+  }
+
+  .card-group > .card:not(:last-child) .card-footer,
+  .card-group > .card:not(:last-child) .card-img-bottom {
+    border-bottom-right-radius: 0;
+  }
+
+  .card-group > .card:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .card-group > .card:not(:first-child) .card-header,
+  .card-group > .card:not(:first-child) .card-img-top {
+    border-top-left-radius: 0;
+  }
+
+  .card-group > .card:not(:first-child) .card-footer,
+  .card-group > .card:not(:first-child) .card-img-bottom {
+    border-bottom-left-radius: 0;
+  }
+}
+
+.card-columns .card {
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 576px) {
+  .card-columns {
+    column-count: 3;
+    column-gap: 1.25rem;
+    orphans: 1;
+    widows: 1;
+  }
+
+  .card-columns .card {
+    display: inline-block;
+    width: 100%;
+  }
+}
+.object > .card-header h1 span.object-identifier {
+  word-break: normal !important;
+  word-wrap: normal !important;
+  color: #777;
+  font-size: 14px;
+  font-weight: 400;
+  margin-right: 3px;
+}
+
+.object > .card-header {
+  padding: 18px;
+}
+
+.object > .card-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  word-break: break-word !important;
+  word-wrap: break-word !important;
+}
+
+.object > .card-header h1 a {
+  border: 0;
+  color: #333;
+  margin: 0;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.object > .card-header h2 {
+  margin: 9px 0 0;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.object > .card-header h2 a {
+  color: #777;
+  text-decoration: none;
+}
+
+div#page {
+  margin: 0;
+  padding: 0;
+  padding-bottom: 30px;
+}
+
+.objectContent {
+  min-height: 500px;
+  padding: 25px;
+}
+
+.object .card .card-header h2,
+.object .card-body > h2,
+.object .section h2,
+.object h2.section-title,
+.objectContent .section h2 {
+  font-weight: 600;
+}
+
+.objectNav {
+  box-sizing: unset;
+  margin: 20px 0 -19px;
+}
+
+.column1 .objectNav {
+  border-right: solid 1px #ddd;
+}
+
+.objectNav .nav-tabs .nav-link:not(.active) {
+  border-right: solid 1px #dee2e6;
+  color: #444;
+}
+
+.objectNav .nav-tabs .nav-link {
+  border-left-color: transparent;
+}
+
+.objectNav .nav-tabs .nav-item:first-child .nav-link.active {
+  border-left: solid 1px #dee2e6;
+}
+
+.objectNav .nav-tabs .nav-item:first-child .nav-link:hover {
+  border-left: solid 1px #dee2e6;
+}
+
+.objectNav .nav-tabs .nav-item:last-child .nav-link:not(.active) {
+  border-right: none;
+}
+
+.objectNav .nav-tabs .nav-item:last-child .nav-link:not(.active):hover {
+  border-right: solid 1px #dee2e6;
+}
+
+.objectNav.objectNav-flush {
+  margin: -1px 0 10px -1px;
+}
+
+.objectNav.objectNav-flush .nav-tabs .nav-link {
+  border-radius: 0;
+}
+
+.objectNav.objectNav-flush .nav-tabs .nav-link.active {
+  border-top-color: #fff;
+  border-bottom: solid 1px #fff;
+}
+
+.objectNav.objectNav-flush .nav-tabs .nav-item:first-child .nav-link {
+  border-left: solid 1px #dee2e6;
+}
+
+.objectButtons {
+  background-color: #f3f3f3;
+  border: solid 1px #ddd;
+  padding: 10px 18px;
+  text-align: left;
+}
+
+.objectButtonsTop {
+  background-color: #e7e7e7;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 18px;
+  text-align: left;
+}
+
+.objectButtonsBottom {
+  background-color: #e7e7e7;
+  border-top: 1px solid #ddd;
+  padding: 10px 18px;
+  text-align: left;
+}
+
+.objectButtonsBottom input[type="text"],
+.objectButtonsTop input[type="text"] {
+  margin-right: 5px;
+}
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px
+}

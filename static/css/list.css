@@ -1,0 +1,40 @@
+
+.bodyHeader {
+    border-bottom: solid 1px #ddd;
+    margin: 0 0 15px 0;
+    padding: 0 0 5px 0
+}
+
+.bodyHeader h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 4px 0 0 0
+}
+
+.bodyHeader h1 img {
+    margin: 0 10px 0 0;
+    margin-top: -3px;
+    vertical-align: middle
+}
+
+.bodyHeaderFooter {
+    color: #666;
+    font-size: 14px;
+    line-height: 16px;
+    margin: -3px 0 20px 0;
+    padding: 0
+}
+
+.bodyHeader h1 {
+    vertical-align: bottom
+}
+
+.bodyHeader a.button {
+    padding: 2px 0
+}
+
+.bodyHeader a.button img {
+    margin-right: 5px;
+    margin-top: -2px;
+    vertical-align: middle
+}

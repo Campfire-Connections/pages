@@ -1,7 +1,7 @@
 <!-- partials/breadcrumbs.html -->
 {% if breadcrumbs %}
 {% block breadcrumbs-wrapper %}
-{#<nav aria-label="breadcrumb">#}
+<nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         {% block breadcrumbs %}
         {% for breadcrumb in breadcrumbs %}
@@ -9,6 +9,6 @@
         {% endfor %}
         {% endblock breadcrumbs %}
     </ol>
-{#</nav>#}
+</nav>
 {% endblock breadcrumbs-wrapper %}
 {% endif %}
