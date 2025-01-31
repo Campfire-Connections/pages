@@ -1,45 +1,87 @@
 {% extends "base/layout.html" %}
+{% load static %}
+{% load my_filters %}
 {% load render_table from django_tables2 %}
-{% load string_filters %}
+{% block title_text %}{{object.name|pluralize_word:True}}{% endblock title_text %}
+
+{% block stylesheets_local %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+{% endblock stylesheets_local %}
 
 {% block content %}
-<br /><br/><br/><br/>
-<div class="dashboard-container">
-    <h1>Dashboard</h1>
-    <div id="dashboard-widgets" class="dashboard-widgets cards">
-        {% for widget in widgets %}
-            <section class="dashboard-widget card">
-                <h2> {{ widget.name|underscore_to_space|title }} 
-                    <a href="{{ widget.create_url }}">
-                    {% if item.icon %}
-                        <i class="fas {{ item.icon }}"></i>
-                    {% else %}
-                        <i class="fas fa-plus"></i>
-                    {% endif %}
-                    </a>
-                </h2>
-                {% if widget.table %}
-                    {% render_table widget.table %}
-                {% else %}
-                    <p>No data available.</p>
-                {% endif %}
-            </section>
-        {% endfor %}
+<div class="bodyHeader clearfix" style="margin-bottom:8px;">
+    <div class="floatLeft">
+        <h1>My Dashboard</h1>
+    </div>
+</div>
+<div class="bodyHeaderFooter clearfix">
+    <div class="row">
+        <div class="col-4 col-md-6">
+            <p style="margin-top:5px;"><span id="ctl00_MainContent_lblDate">Saturday, January 25, 2025</span></p>
+        </div>
+        <div class="col-8 col-md-6">
+            <div class="float-right">
+                <div class="form-inline">
+                    
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Include JavaScript for drag-and-drop -->
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
-<script>
-    // Initialize drag-and-drop sorting for widgets
-    const container = document.getElementById("dashboard-widgets");
-    Sortable.create(container, {
-        animation: 150,
-        onEnd: function (evt) {
-            // Save the new widget order (e.g., via AJAX)
-            const orderedWidgets = Array.from(container.children).map(widget => widget.dataset.widget);
-            console.log("New widget order:", orderedWidgets);
-        }
-    });
-</script>
+<div class="row">
+    <div class="col-6 col-md-4 col-lg-3">
+        <div id="divSearch" class="card dashboard-panel">
+            <div class="card-body">
+                <h2 class="card-title">Search</h2>
+                <div class="input-group">
+                    <input name="ctl00$MainContent$ctl00$txtSearch" type="text" id="txtSearch" class="form-control" placeholder="Enter search text">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search <span class="caret"></span></button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a id="ctl00_MainContent_ctl00_lnkbtnSearchServiceRequests" class="dropdown-item" href="javascript:__doPostBack('ctl00$MainContent$ctl00$lnkbtnSearchServiceRequests','')">Search Service Requests</a>
+                            <a id="ctl00_MainContent_ctl00_lnkbtnSearchCustomers" class="dropdown-item" href="javascript:__doPostBack('ctl00$MainContent$ctl00$lnkbtnSearchCustomers','')">Search Customers</a>
+                            <a id="ctl00_MainContent_ctl00_lnkbtnSearchEquipment" class="dropdown-item" href="javascript:__doPostBack('ctl00$MainContent$ctl00$lnkbtnSearchEquipment','')">Search Equipment</a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card dashboard-panel">
+            <div class="card-body" style="max-height:350px; overflow-x:hidden; overflow-y:auto;">
+                <h2 class="card-title">Sidebar Items</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-md-8 col-lg-9">
+        <div class="bm15"></div>
+
+        <div class="dashboard-widgets">
+            {% for widget in widgets %}
+            <div class="widget">
+                <h3>{{ widget.title }}</h3>
+                {% if widget.chart %}
+                    <canvas id="chart-{{ forloop.counter }}"></canvas>
+                    <script>
+                        const ctx{{ forloop.counter }} = document.getElementById('chart-{{ forloop.counter }}').getContext('2d');
+                        new Chart(ctx{{ forloop.counter }}, {{ widget.chart|safe }});
+                    </script>
+                {% elif widget.table %}
+                    {% render_table widget.table.class widget.table.queryset %}
+                {% elif widget.text %}
+                    <p>{{ widget.text }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        </div>
+        
+    </div>
+</div>
+
 {% endblock %}

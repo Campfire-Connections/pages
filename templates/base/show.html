@@ -1,7 +1,7 @@
 <!-- pages/templates/base/layout.html -->
 {% extends 'base/layout.html' %}
 {% load static %}
-{% block title_text %}Details{% endblock title_text %}
+{% block title_text %}{{object.name | title }}{% endblock title_text %}
 
 {% block stylesheets_local %}
     {{ block.super }}
@@ -12,7 +12,7 @@
     <div class="card object">
         <div class="card-header">
             {% block card_header %}
-            <div style="margin-bottom: 30px">
+            <div style="margin-bottom: 20px">
                 <div id="objectHeader" style="display: flex !important;">
                     <div style="margin-right: 4px">
                         <h1>
@@ -29,10 +29,10 @@
                                 </div>
                             </div>
                             <div style="margin: 0 15px">
-                                <button id="srAddCommentButton" class="add-comment btn btn-secondary" title="Add Comment">
+                                <button id="addCommentButton" class="add-comment btn btn-secondary" title="Add Comment">
                                     <span class="fa fa-fw fa-comment fa-alignment-fix comment-icon-color"></span>
                                 </button>
-                                <button type="button" id="srPrintButton" class="print btn btn-secondary" title="Print">
+                                <button type="button" id="printButton" class="print btn btn-secondary" title="Print">
                                     <span class="fa fa-fw fa-print"></span>
                                 </button>
                             </div>
@@ -42,36 +42,32 @@
                                         Actions
                                     </button>
                                 <div class="dropdown-menu dropdown-menu-right" style="">
-                                        <a href="#" class="dropdown-item change-status">
-                                            <span class="fas fa-fw fa-check-circle status-change-icon-color"></span>
-                                            Change Status
-                                        </a>
-                                        <a href="#" class="dropdown-item add-comment">
-                                            <span class="fas fa-fw fa-comment fa-alignment-fix comment-icon-color"></span>
-                                            Add Comment
-                                        </a>
-                                        <a id="srHeader_lnkAddAssignment" class="dropdown-item sr-assignment-assign-button" data-srid="82730">
-                                            <span class="fas fa-fw fa-arrow-right assignment-icon-color"></span>
-                                            Assign Faculty
-                                        </a>
-                                        <div role="separator" class="dropdown-divider"></div>
-                                        <a href="#" class="dropdown-item print">
-                                            <span class="fas fa-fw fa-print lm1"></span> 
-                                            Print
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <span class="fas fa-fw fa-envelope"></span> 
-                                            Email Customer
-                                        </a>
-                                        <div role="separator" class="dropdown-divider"></div>
-                                        <a href="#" class="dropdown-item">
-                                            <span class="fas fa-fw fa-copy"></span> 
-                                            Clone
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            <span class="fas fa-fw fa-edit"></span> 
-                                            Edit
-                                        </a>
+                                    <a href="#" class="dropdown-item change-status">
+                                        <span class="fas fa-fw fa-check-circle status-change-icon-color"></span>
+                                        Change Status
+                                    </a>
+                                    <a href="#" class="dropdown-item add-comment">
+                                        <span class="fas fa-fw fa-comment fa-alignment-fix comment-icon-color"></span>
+                                        Add Comment
+                                    </a>
+                                    <a id="header_addFaculty" class="dropdown-item" href="#">
+                                        <span class="fas fa-fw fa-arrow-right"></span>
+                                        Assign {{ organization_labels.faculty_label | title}}
+                                    </a>
+                                    <div role="separator" class="dropdown-divider"></div>
+                                    <a href="#" class="dropdown-item print">
+                                        <span class="fas fa-fw fa-print lm1"></span> 
+                                        Print
+                                    </a>
+                                    <div role="separator" class="dropdown-divider"></div>
+                                    <a href="#" class="dropdown-item">
+                                        <span class="fas fa-fw fa-copy"></span> 
+                                        Clone
+                                    </a>
+                                    <a href="#" class="dropdown-item">
+                                        <span class="fas fa-fw fa-edit"></span> 
+                                        Edit
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -99,20 +95,20 @@
                     {% block object_nav_tabs %}
                     {% block object_nav_tab_overview %}
                     <li class="nav-item" role="presentation">
-                        <a href="#" id="tabs_tabOverview" class="nav-link active">Overview</a>
+                        <a href="#overviewTab" id="tabs_tabOverview" class="nav-link active" data-bs-toggle="tab">Overview</a>
                     </li>
                     {% endblock object_nav_tab_overview %}
-                    <li class="nav-item" role="presentation">
-                        <a href="#" id="tabs_tabItems" class="nav-link">Items</a>
-                    </li>
+
                     {% endblock object_nav_tabs %}
                 </ul>
             </div>
             {% endblock object_nav_tabs_wrapper %}
         </div>
-        <div style="display: flex !important;">
-            <div style="flex-grow: 1 !important">
-                <div class="card-body">
+        <div style="display: flex !important;" class="tab-content">
+            {% block card_body_wrapper %}
+            <div style="flex-grow: 1 !important" id="overviewTab" class="tab-pane fade show active">
+                {% block card_body_overview %}
+                <div class="card-body" id="overviewCard">
                     <h2 class="no-border card-title section-title">Detailed Description</h2>
                     <div id="notes" class="field-value" style="width: 100%; overflow: hidden; word-break: break-word;">
                         <span id="objectDetailedDescription" class="readmore" style="max-height: none;">
@@ -120,8 +116,38 @@
                         </span>&nbsp;
                     </div>
                 </div>
+                {% endblock card_body_overview %}
             </div>
+            {% endblock card_body_wrapper %}
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll('a[data-bs-toggle="tab"]');
+    
+        console.log("Tabs initialized:", tabs); // Debugging
+    
+        // Check if a tab was previously selected
+        const activeTab = localStorage.getItem("activeTab");
+        if (activeTab) {
+            const activeTabElement = document.querySelector(`a[href="${activeTab}"]`);
+            if (activeTabElement) {
+                console.log("Restoring active tab:", activeTab); // Debugging
+                new bootstrap.Tab(activeTabElement).show();
+            }
+        }
+    
+        // Save the currently selected tab to localStorage
+        tabs.forEach((tab) => {
+            tab.addEventListener("shown.bs.tab", (event) => {
+                const href = event.target.getAttribute("href");
+                console.log("Tab selected:", href); // Debugging
+                localStorage.setItem("activeTab", href);
+            });
+        });
+    });
+    
+</script>
+
 {% endblock content %}

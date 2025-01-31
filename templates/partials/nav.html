@@ -1,91 +1,254 @@
-<!-- partials/nav.html // -->
+<!-- partials/nav.html -->
 {% load static %}
+{% load my_filters %}
+
 <nav class="navbar navbar-expand-lg navbar-dark main-navbar">
     <button id="mainNavbarMenuButton" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar-collapse-1" aria-controls="main-navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="main-navbar-collapse-1">
         <div class="navbar-nav">
 
         {% block main_nav %}
+
         <!-- DASHBOARD TAB -->
         <div id="dashboardMenu" class="nav-item icon-only-tab active">
             <a class="nav-link" href="{% url 'dashboard' %}" title="Dashboard"><span class="fas fa-fire tab-icon"></span><span class="tab-text">Dashboard</span></a>
         </div>
 
-        <!-- FACILITY MGMT TAB -->
-        <div id="facilityMgmtMenu" class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-facility-mgmt" role="button" aria-haspopup="true" aria-expanded="false">
-                {{organization_labels.facility_label | title}} Mgmt
+        {% if user.is_authenticated %}
+        
+        <!-- ATTENDEE MENU -->
+        {% if user.user_type == 'ATTENDEE' %}
+
+        <div id="attendeeMenu" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-attendee" role="button" aria-haspopup="true" aria-expanded="false">
+                My Profile
+                <i class="fas fa-chevron-down lm5"></i>
+            </a>
+
+            <div class="dropdown-menu main-nav-dropdown">
+
+                <a class="dropdown-item" href="#">
+                    <span class="fas fa-calendar fa-fw"></span> My Schedule
+                </a>
+
+                <a class="dropdown-item" href="{% url 'attendees:enrollments:index' slug=user_profile.slug %}">
+                    <span class="fas fa-user-check fa-fw"></span> My Enrollments
+                </a>
+
+                <a class="dropdown-item" href="{% url 'resources' %}">
+                    <span class="fas fa-book fa-fw"></span> Resources
+                </a>
+
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- FACTION LEADER MENU -->
+        {% if user.user_type == 'FACTION_LEADER' %}
+
+        <div id="factionLeaderMenu" class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-faction-leader" role="button" aria-haspopup="true" aria-expanded="false">
+                Faction Mgmt
+                <i class="fas fa-chevron-down lm5"></i>
+            </a>
+
+            <div class="dropdown-menu main-nav-dropdown">
+
+                <a class="dropdown-item" href="#">
+                    <span class="fas fa-users fa-fw"></span> View Roster
+                </a>
+                <a class="dropdown-item" href="{% url 'factions:enrollments' faction_slug=user.faction.slug %}">
+                    <span class="fas fa-calendar-alt fa-fw"></span> Manage Enrollments
+                </a>
+
+                <a class="dropdown-item" href="{% url 'resources' %}">
+                    <span class="fas fa-book fa-fw"></span> Faction Resources
+                </a>
+
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ADMIN FACTION LEADER MENU -->
+        {% if user.user_type == 'ADMIN_FACTION_LEADER' %}
+
+        <div id="adminFactionMenu" class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-admin-faction-leader" role="button" aria-haspopup="true" aria-expanded="false">
+                Admin Tools
                 <i class="fas fa-chevron-down lm5"></i>
             </a>
             <div class="dropdown-menu main-nav-dropdown">
+
+                <a class="dropdown-item" href="{% url 'factions:manage' faction_slug=user.faction.slug %}">
+                    <span class="fas fa-cogs fa-fw"></span> Manage Faction
+                </a>
+
+                <a class="dropdown-item" href="{% url 'reports' %}">
+                    <span class="fas fa-chart-bar fa-fw"></span> View Reports
+                </a>
+
+                <a class="dropdown-item" href="{% url 'leaders:enrollments' %}">
+                    <span class="fas fa-calendar-alt fa-fw"></span> Enrollments
+                </a>
+
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- FACULTY MENU -->
+        {% if user.user_type == 'FACULTY' %}
+
+        <div id="facultyMenu" class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-faculty" role="button" aria-haspopup="true" aria-expanded="false">
+                {{organization_labels.faculty_label | title}} Portal
+                <i class="fas fa-chevron-down lm5"></i>
+            </a>
+
+            <div class="dropdown-menu main-nav-dropdown">
+
+                <a class="dropdown-item" href="#">
+                    <span class="fas fa-calendar fa-fw"></span> My Schedule
+                </a>
+
+                <a class="dropdown-item" href="#">
+                    <span class="fas fa-user-check fa-fw"></span> My Enrollments
+                </a>
+
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- FACULTY ADMIN MENU -->
+        {% if user.user_type == 'FACULTY' and user.is_admin %}
+
+        <div id="facultyAdminMenu" class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-faculty-admin" role="button" aria-haspopup="true" aria-expanded="false">
+                {{organization_labels.faculty_label | title}} Admin
+                <i class="fas fa-chevron-down lm5"></i>
+            </a>
+
+            <div class="dropdown-menu main-nav-dropdown">
+
                 <a class="dropdown-item" href="{% url 'facilities:facultys:new' facility_slug=user.facultyprofile_profile.facility.slug %}">
                     <span class="fas fa-plus-square fa-fw"></span>
                     New {{organization_labels.faculty_label | title}}
                 </a>
+
+                <div role="separator" class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'facilities:faculty:manage' facility_slug=user.facultyprofile_profile.facility.slug %}">
+                    <span class="fas fa-users-cog fa-fw"></span> Manage {{organization_labels.faculty_label | title}}
+                </a>
+
+                <a class="dropdown-item" href="{% url 'reports:list_user_reports' %}">
+                    <span class="fas fa-chart-bar fa-fw"></span> {{organization_labels.faculty_label | title}} Reports
+                </a>
+
+            </div>
+        </div>
+
+        <!-- FACILITY MGMT TAB -->
+        <div id="facilityMgmtMenu" class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-facility-mgmt" role="button" aria-haspopup="true" aria-expanded="false">
+                {{organization_labels.facility_label | title}} Mgmt
+                <i class="fas fa-chevron-down lm5"></i>
+            </a>
+
+            <div class="dropdown-menu main-nav-dropdown">
+
                 <a class="dropdown-item" href="{% url 'facilities:departments:new' facility_slug=user.facultyprofile_profile.facility.slug %}">
                     <span class="fas fa-plus-square fa-fw"></span>
-                    New Department
+                    New {{ organization_labels.department_label }}
                 </a>
+
                 <a class="dropdown-item" href="{% url 'facilities:quarters:new' facility_slug=user.facultyprofile_profile.facility.slug %}">
                     <span class="fas fa-plus-square fa-fw"></span>
                     New {{organization_labels.quarters_label | default:'quarters'|title}}
                 </a>
+
                 <div role="separator" class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{% url 'facilities:facultys:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-th-list fa-fw"></span>{{organization_labels.faculty_label | title}}</a>
-                <a class="dropdown-item" href="{% url 'facilities:departments:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-th-list fa-fw"></span>Departments</a>
-                <a class="dropdown-item" href="{% url 'facilities:quarters:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-th-list fa-fw"></span>{{organization_labels.quarters_label | default:'quarters'|title}}</a>
+
+                <a class="dropdown-item" href="{% url 'facilities:departments:index' facility_slug=user.facultyprofile_profile.facility.slug %}">
+                    <span class="fas fa-th-list fa-fw"></span>
+                    {{ organization_labels.department_label | pluralize_word:True}}
+                </a>
+
+                <a class="dropdown-item" href="{% url 'facilities:quarters:index' facility_slug=user.facultyprofile_profile.facility.slug %}">
+                    <span class="fas fa-th-list fa-fw"></span>
+                    {{organization_labels.quarters_label | default:'quarters'|title}}
+                </a>
+
                 <div role="separator" class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{% url 'facilities:enrollments:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-calendar-week fa-fw"></span>{{organization_labels.facility_enrollment_label | title}}s</a>
+
+                <a class="dropdown-item" href="{% url 'facilities:enrollments:index' facility_slug=user.facultyprofile_profile.facility.slug %}">
+                    <span class="fas fa-calendar-week fa-fw"></span>
+                    {{organization_labels.facility_enrollment_label | pluralize_word:True }}
+                </a>
+
             </div>
         </div>
 
         <!-- COURSE MGMT TAB //-->
         <div id="courseMgmtMenu" class="nav-item dropdown">
+
             <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-course-mgmt" role="button" aria-haspopup="true" aria-expanded="false">
                 Course Mgmt
                 <i class="fas fa-chevron-down lm5"></i>
             </a>
+
             <div class="dropdown-menu main-nav-dropdown">
+
                 <a class="dropdown-item" href="{% url 'courses:new' %}">
                     <span class="fas fa-plus-square fa-fw"></span>
                     New Course
                 </a>
+
                 <a class="dropdown-item" href="{% url 'facilities:classes:new' facility_slug=user.facultyprofile_profile.facility.slug %}">
                     <span class="fas fa-plus-square fa-fw"></span>
                     New Class
                 </a>
-                <div role="separator" class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{% url 'facilities:courses:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-th-list fa-fw"></span>Courses</a>
-                <a class="dropdown-item" href="{% url 'facilities:classes:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-th-list fa-fw"></span>Classes</a>
-            </div>
-        </div>
 
-        <!-- MY ENROLLMENTS TAB //-->
-        <div id="myEnrollmentsMenu" class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" data-dropdown-anchor-element="tab-my_enrollments" role="button" aria-haspopup="true" aria-expanded="false">
-                My Enrollments
-                <i class="fas fa-chevron-down lm5"></i>
-            </a>
-            <div class="dropdown-menu main-nav-dropdown">
-                <a class="dropdown-item" href="#">
-                    <span class="fas fa-plus-square fa-fw"></span>
-                    New Enrollment
-                </a>
                 <div role="separator" class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{% url 'facilities:enrollments:index' facility_slug=user.facultyprofile_profile.facility.slug %}"><span class="fas fa-calendar-week fa-fw"></span>{{organization_labels.facility_enrollment_label | title}}s</a>
+
+                <a class="dropdown-item" href="{% url 'facilities:courses:index' facility_slug=user.facultyprofile_profile.facility.slug %}">
+                    <span class="fas fa-th-list fa-fw"></span>
+                    Courses
+                </a>
+
+                <a class="dropdown-item" href="{% url 'facilities:classes:index' facility_slug=user.facultyprofile_profile.facility.slug %}">
+                    <span class="fas fa-th-list fa-fw"></span>
+                    Classes
+                </a>
+
+                <div role="separator" class="dropdown-divider"></div>
+
+                <a class="dropdown-item" href="#">
+                    <span class="fas fa-balance-scale"></span>
+                    Balance Classes
+                </a>
+
             </div>
         </div>
+        {% endif %}
+
+        {% endif %}
     {% endblock main_nav %}
+    </div>
+
 
     </div>
     <div class="navbar-nav main-navbar-right float-end">
- 
+        {% if user.is_authenticated %}
         <!-- SEARCH TAB //-->
         <div class="nav-item">
             <div class="my-3 mr-2">
                 <div class="input-group">
                     <input type="search" id="txtGlobalSearch" class="form-control" placeholder="Search for..." cols="15" autocomplete="off">
-                    <div id="txtGlobalSearchInfo" class="input-group-text" data-bs-toggle="tooltip" data-bs-html="true" title="<div class='text-left' style='font-size:80%;'><div class='mt-0 mb-3'>Find items that <strong><i>start with</i></strong> the text entered.</div><div><p class='mt-0 mb-0'>Items searched:</p><ul class='list-unstyled mb-3'><li>- Customers</li><li>- Contacts</li><li>- Locations</li><li>- Service Requests</li><li>- Equipment</li></ul><p class='mb-0'>Note: Only the first 10 matching items of each type will be shown.</p></div></div>">
+                    <div id="txtGlobalSearchInfo" class="input-group-text" data-bs-toggle="tooltip" data-bs-html="true" title="">
                         <span id="searchInfoIcon" class="fa fa-info-circle fa-fw mt-1"></span>
                         <span id="searchLoadingIcon" class="fa fa-spinner fa-spin fa-fw"></span>
                     </div>
@@ -113,8 +276,8 @@
 
         <!-- ORGANIZATION / FACTION -->
         <div id="appTitleMenu" class="nav-item dropdown current-user-menu d-none d-lg-block">
-            <a href="{% url 'organization_show' organization_slug=user.facultyprofile_profile.organization.slug %}" class="nav-link app-title " onclick="return false;">
-                {{ user.facultyprofile_profile.organization}}
+            <a href="{% url 'organization_show' organization_slug=user_profile.organization.slug %}" class="nav-link app-title " onclick="return false;">
+                {{ user_profile.organization}}
             </a>
         </div>
 
@@ -152,10 +315,18 @@
                 <a class="dropdown-item" id="settings" href="{% url 'account_settings' %}"><i class="fas fa-cog fa-fw"></i> Settings</a>
                 <a class="dropdown-item" id="beamer-icon" href="#"><i class="fa fa-envelope fa-fw"></i> Notifications</a>
                 <a class="dropdown-item" href="#"><i class="fa fa-question-circle fa-fw"></i> Help</a>
-                <a class="dropdown-item" id="logout" href="{% url 'logout' %}"><span class="fa fa-sign-out fa-fw"></span> Log Out</a>
+                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                    {% csrf_token %}
+                </form>
+                
+                <a class="dropdown-item" id="logout" href="#" onclick="document.getElementById('logout-form').submit();">
+                    <span class="fa fa-sign-out fa-fw"></span> Sign Out
+                </a>
+                
                 
             </div>
         </div>
+        {% endif %}
     </div>
   </div>
 </nav>

@@ -1,7 +1,8 @@
 {% extends 'base/layout.html' %}
 {% load static %}
+{% load my_filters %}
 {% load render_table from django_tables2 %}
-{% block title_text %}Objects{% endblock title_text %}
+{% block title_text %}{{object.name|pluralize_word:True}}{% endblock title_text %}
 
 {% block stylesheets_local %}
     {{ block.super }}
@@ -14,13 +15,13 @@
     <div class="d-flex justify-content-between align-items-center">
         <div>
             <h1>
-                <span id="lblPageTitle">{% block objects_title %}Objects{% endblock objects_title %}</span>
+                <span id="lblPageTitle">{% block objects_title %}{{object.name|pluralize_word:True}}{% endblock objects_title %}</span>
             </h1>
         </div>
         <div>
             <a class="btn btn-secondary" href="{% block new_url %}new{% endblock new_url %}">
                 <span class="fas fa-fw fa-plus-square" style="color:#15b508;"></span>
-                New {% block object_type %}Object{% endblock object_type %}
+                New {% block object_type %}{{object.name|title}}{% endblock object_type %}
             </a>
         </div>
     </div>

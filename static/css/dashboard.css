@@ -199,3 +199,121 @@ section.top_row section.active_enrollment {
 #dashboard #info-box {
     position: relative;
 }
+
+.dashboard-panel {
+    background: #f3f3f3;
+    margin-bottom: 30px;
+}
+
+.dashboard-panel-past-due {
+    background: #ffd9d9;
+}
+
+.dashboard-panel-header h2, .dashboard-panel .card-title {
+    border-bottom: solid 1px #ccc;
+    margin-bottom: 15px;
+    padding-bottom: 4px;
+}
+
+.dashboard-panel-past-due h2 {
+    border-bottom-color: #cc0000;
+    color: #cc0000;
+}
+
+.dashboard-panel h3 {
+    margin-bottom: 10px;
+}
+
+.dashboard-widget-list-group .list-group-item {
+    background-color: transparent;
+    border-style: solid none none none;
+    padding: 7px 10px;
+}
+
+.dashboard-panel table.badge-list {
+    margin-bottom: 0;
+}
+
+    .dashboard-panel table.badge-list > tbody > tr > td {
+        padding: 0;
+    }
+
+        .dashboard-panel table.badge-list > tbody > tr > td a {
+            display: block;
+            padding: 8px;
+        }
+
+        .dashboard-panel table.badge-list > tbody > tr > td.record-count a {
+            display: block;
+            padding: 7px;
+        }
+
+    .dashboard-panel .view-count-badge,
+    .dashboard-panel .number-column .badge,
+    .dashboard-panel .record-count .badge {
+        font-size:0.8rem;
+    }
+
+.dashboard-panel table.table tr:first-child td {
+    border-top: none;
+}
+
+.dashboard-panel table.badge-list td.record-count {
+    text-align: right;
+    width: 60px;
+}
+
+.dashboard-panel table.badge-list td.name {
+    width: auto;
+}
+
+.dashboard-panel-past-due .dashboard-widget-list-group .list-group-item {
+    background-color: #ffd9d9;
+    border-style: none;
+}
+
+    .dashboard-panel-past-due .dashboard-widget-list-group .list-group-item .badge {
+        background-color: #C55858 !important;
+    }
+
+.dashboard-panel .dashboard-widget-list-group .list-group-item:first-child {
+    border-style: none;
+}
+
+.dashboard-panel .dashboard-widget-list-group .list-group-item .number-column {
+    display: inline-block;
+    float: left;
+    text-align: right;
+    width: 40px;
+}
+
+.dashboard-panel .dashboard-widget-list-group .list-group-item .text-column {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.dashboard-panel-important {
+    background-color: #fcf8e3;
+}
+
+    .dashboard-panel-important .dashboard-widget-list-group .list-group-item {
+        background-color: #fcf8e3;
+    }
+
+.dashboard-panel-header {
+}
+
+    .dashboard-panel-header a {
+        color: #999;
+    }
+
+    .dashboard-panel-header .panel-buttons {
+        float: right;
+        font-size: 14px;
+        font-weight: normal;
+    }
+
+.dashboard-panel-section-past-due .badge {
+    background-color: #cc0000 !important;
+    color: #fff !important;
+}

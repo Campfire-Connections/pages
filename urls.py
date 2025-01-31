@@ -1,8 +1,7 @@
-from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
+# pages/urls.py
+
 from django.views.generic import TemplateView
+from django.urls import path
 
 from . import views
 
@@ -45,6 +44,6 @@ urlpatterns = [
     ),
     path("save-layout/", views.save_layout, name="save_layout"),
     # Misc
-    #path("reports/", views.ReportView.as_view(), name="reports"),
+    # path("reports/", views.ReportView.as_view(), name="reports"),
     path("resources/", views.ResourceView.as_view(), name="resources"),
 ]
