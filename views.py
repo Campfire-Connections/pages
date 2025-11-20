@@ -19,14 +19,44 @@ class ResourceView(TemplateView):
     template_name = "base/resources.html"
 
 
+@login_required
 @csrf_exempt
 def save_layout(request):
-    if request.method == "POST":
-        layout = request.POST.get("layout")
-        user = request.user
-        DashboardLayout.objects.update_or_create(user=user, defaults={"layout": layout})
+    if request.method != "POST":
+        return JsonResponse({"status": "error"}, status=400)
+
+    user = request.user
+    data = json.loads(request.body.decode("utf-8"))
+    action = data.get("action")
+    widget_key = data.get("widget_key")
+    portal_key = data.get("portal_key") or data.get("portal") or request.GET.get(
+        "portal"
+    )
+
+    layout, _ = DashboardLayout.objects.get_or_create(
+        user=user, portal_key=portal_key or "default"
+    )
+
+    if action == "hide_widget" and widget_key:
+        hidden = set(layout.hidden_widgets or [])
+        hidden.add(widget_key)
+        layout.hidden_widgets = list(hidden)
+        layout.save()
+        return JsonResponse({"status": "success", "hidden_widgets": layout.hidden_widgets})
+
+    if action == "show_widget" and widget_key:
+        hidden = set(layout.hidden_widgets or [])
+        hidden.discard(widget_key)
+        layout.hidden_widgets = list(hidden)
+        layout.save()
+        return JsonResponse({"status": "success", "hidden_widgets": layout.hidden_widgets})
+
+    if layout_data := data.get("layout"):
+        layout.layout = layout_data
+        layout.save()
         return JsonResponse({"status": "success"})
-    return JsonResponse({"status": "error"}, status=400)
+
+    return JsonResponse({"status": "error", "message": "Invalid action"}, status=400)
 
 
 @login_required

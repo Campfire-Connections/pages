@@ -22,7 +22,21 @@
     {% load static %}
 
     {% block javascripts %}
-        {% block javascripts_local %}{% endblock javascripts_local %}
+        {% block javascripts_local %}
+        <script type="text/javascript">
+            window.CF = window.CF || {};
+            window.CF.saveDashboardPrefs = function (payload) {
+                return fetch("{% url 'save_layout' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: JSON.stringify(payload)
+                }).then(resp => resp.json());
+            };
+        </script>
+        {% endblock javascripts_local %}
 
         {% block javascripts_external %}
     <!-- Bootstrap JS and dependencies -->

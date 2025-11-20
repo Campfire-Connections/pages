@@ -12,10 +12,17 @@
 {% endblock stylesheets_local %}
 
 {% block content %}
-<div class="bodyHeader clearfix" style="margin-bottom:8px;">
+<div class="bodyHeader clearfix d-flex justify-content-between align-items-center" style="margin-bottom:8px;">
     <div class="floatLeft">
         <h1>My Dashboard</h1>
     </div>
+    {% if request.user.is_authenticated %}
+    <div>
+        <button class="btn btn-outline-secondary btn-sm" id="toggleEditWidgets">
+            <span class="fas fa-sliders-h"></span> Customize
+        </button>
+    </div>
+    {% endif %}
 </div>
 <div class="bodyHeaderFooter clearfix">
     <div class="row">
@@ -39,6 +46,9 @@
                 <section class="dashboard-card card h-100" id="{{ widget.slug }}">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h3 class="card-title mb-0">{{ widget.title }}</h3>
+                        <button class="btn btn-light btn-sm widget-toggle-btn d-none" data-widget-key="{{ widget.key }}">
+                            <span class="fas fa-times"></span>
+                        </button>
                     </div>
                     <div class="card-body">
                         {% if widget.template %}
@@ -85,7 +95,7 @@
                 </section>
             </div>
         {% endfor %}
-    {% else %}
+{% else %}
         <div class="col-12">
             <section class="card h-100 text-center py-5">
                 <p class="text-muted mb-0">No widgets are configured for this dashboard yet.</p>
@@ -93,5 +103,49 @@
         </div>
     {% endif %}
 </div>
+
+{% block javascripts_local %}
+{{ block.super }}
+<script>
+    (function () {
+        const toggleButton = document.getElementById("toggleEditWidgets");
+        if (!toggleButton) return;
+
+        let editMode = false;
+        const cards = document.querySelectorAll(".dashboard-card");
+
+        toggleButton.addEventListener("click", function () {
+            editMode = !editMode;
+            cards.forEach(card => {
+                const btn = card.querySelector(".widget-toggle-btn");
+                if (btn) {
+                    btn.classList.toggle("d-none", !editMode);
+                }
+            });
+            toggleButton.classList.toggle("btn-outline-secondary", !editMode);
+            toggleButton.classList.toggle("btn-danger", editMode);
+            toggleButton.innerHTML = editMode ? '<span class="fas fa-check"></span> Done' : '<span class="fas fa-sliders-h"></span> Customize';
+        });
+
+        document.querySelectorAll(".widget-toggle-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const key = this.dataset.widgetKey;
+                const card = this.closest(".dashboard-card");
+                if (!key || !card) return;
+
+                card.classList.add("d-none");
+                if (window.CF && window.CF.saveDashboardPrefs) {
+                    window.CF.saveDashboardPrefs({
+                        action: "hide_widget",
+                        widget_key: key
+                    }).catch(() => {
+                        card.classList.remove("d-none");
+                    });
+                }
+            });
+        });
+    })();
+</script>
+{% endblock javascripts_local %}
 
 {% endblock %}
