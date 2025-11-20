@@ -32,56 +32,66 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-6 col-md-4 col-lg-3">
-        <div id="divSearch" class="card dashboard-panel">
-            <div class="card-body">
-                <h2 class="card-title">Search</h2>
-                <div class="input-group">
-                    <input name="ctl00$MainContent$ctl00$txtSearch" type="text" id="txtSearch" class="form-control" placeholder="Enter search text">
-                    <div class="input-group-append">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search <span class="caret"></span></button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a id="ctl00_MainContent_ctl00_lnkbtnSearchServiceRequests" class="dropdown-item" href="javascript:__doPostBack('ctl00$MainContent$ctl00$lnkbtnSearchServiceRequests','')">Search Service Requests</a>
-                            <a id="ctl00_MainContent_ctl00_lnkbtnSearchCustomers" class="dropdown-item" href="javascript:__doPostBack('ctl00$MainContent$ctl00$lnkbtnSearchCustomers','')">Search Customers</a>
-                            <a id="ctl00_MainContent_ctl00_lnkbtnSearchEquipment" class="dropdown-item" href="javascript:__doPostBack('ctl00$MainContent$ctl00$lnkbtnSearchEquipment','')">Search Equipment</a>
-                            
-                        </div>
+<div class="dashboard-grid row g-3">
+    {% if widgets %}
+        {% for widget in widgets %}
+            <div class="col-12 col-xl-{{ widget.width|default:12 }}">
+                <section class="dashboard-card card h-100" id="{{ widget.slug }}">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="card-title mb-0">{{ widget.title }}</h3>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="card dashboard-panel">
-            <div class="card-body" style="max-height:350px; overflow-x:hidden; overflow-y:auto;">
-                <h2 class="card-title">Sidebar Items</h2>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-6 col-md-8 col-lg-9">
-        <div class="bm15"></div>
-
-        <div class="dashboard-widgets">
-            {% for widget in widgets %}
-            <div class="widget">
-                <h3>{{ widget.title }}</h3>
-                {% if widget.chart %}
-                    <canvas id="chart-{{ forloop.counter }}"></canvas>
-                    <script>
-                        const ctx{{ forloop.counter }} = document.getElementById('chart-{{ forloop.counter }}').getContext('2d');
-                        new Chart(ctx{{ forloop.counter }}, {{ widget.chart|safe }});
-                    </script>
-                {% elif widget.table %}
-                    {% render_table widget.table.class widget.table.queryset %}
-                {% elif widget.text %}
-                    <p>{{ widget.text }}</p>
-                {% endif %}
+                    <div class="card-body">
+                        {% if widget.template %}
+                            {% include widget.template with widget=widget %}
+                        {% elif widget.type == "table" and widget.table %}
+                            {% render_table widget.table %}
+                        {% elif widget.type == "chart" %}
+                            <div class="chart-wrapper">
+                                <canvas id="{{ widget.chart_id }}"></canvas>
+                            </div>
+                            <script>
+                                (function() {
+                                    const ctx = document.getElementById("{{ widget.chart_id }}").getContext("2d");
+                                    const config = {{ widget.chart_config|safe }};
+                                    new Chart(ctx, config);
+                                })();
+                            </script>
+                        {% elif widget.type == "actions" %}
+                            <div class="list-group">
+                                {% for action in widget.actions %}
+                                    <a class="list-group-item list-group-item-action d-flex align-items-center" href="{{ action.url }}">
+                                        {% if action.icon %}<span class="{{ action.icon }} me-2"></span>{% endif %}
+                                        {{ action.label }}
+                                    </a>
+                                {% empty %}
+                                    <p class="text-muted mb-0">No quick actions available.</p>
+                                {% endfor %}
+                            </div>
+                        {% elif widget.type == "metrics" %}
+                            <div class="row g-3">
+                                {% for metric in widget.metrics %}
+                                    <div class="col-6">
+                                        <div class="metric-card">
+                                            <div class="metric-label">{{ metric.label }}</div>
+                                            <div class="metric-value">{{ metric.value }}</div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="mb-0">{{ widget.content|default:"" }}</p>
+                        {% endif %}
+                    </div>
+                </section>
             </div>
         {% endfor %}
-        
+    {% else %}
+        <div class="col-12">
+            <section class="card h-100 text-center py-5">
+                <p class="text-muted mb-0">No widgets are configured for this dashboard yet.</p>
+            </section>
         </div>
-        
-    </div>
+    {% endif %}
 </div>
 
 {% endblock %}

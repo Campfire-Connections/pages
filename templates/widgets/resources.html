@@ -1,0 +1,14 @@
+<div class="resource-list list-group list-group-flush">
+    {% if widget.items %}
+        {% for item in widget.items %}
+            <a class="list-group-item list-group-item-action" href="{{ item.url|default:'#' }}">
+                <div class="fw-semibold">{{ item.title }}</div>
+                {% if item.subtitle %}
+                    <div class="text-muted small">{{ item.subtitle }}</div>
+                {% endif %}
+            </a>
+        {% endfor %}
+    {% else %}
+        <div class="list-group-item text-muted small">{{ widget.empty_message }}</div>
+    {% endif %}
+</div>

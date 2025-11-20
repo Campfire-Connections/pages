@@ -1,0 +1,17 @@
+<div class="announcement-list list-group list-group-flush">
+    {% if widget.items %}
+        {% for announcement in widget.items %}
+            <div class="list-group-item">
+                <div class="fw-semibold">{{ announcement.title }}</div>
+                {% if announcement.subtitle %}
+                    <div class="text-muted small">{{ announcement.subtitle }}</div>
+                {% endif %}
+                {% if announcement.meta %}
+                    <div class="text-muted tiny">{{ announcement.meta }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="list-group-item text-muted small">{{ widget.empty_message }}</div>
+    {% endif %}
+</div>

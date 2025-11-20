@@ -1,0 +1,14 @@
+<div class="list-group list-group-flush action-list">
+    {% if widget.actions %}
+        {% for action in widget.actions %}
+            <a class="list-group-item list-group-item-action d-flex align-items-center" href="{{ action.url }}">
+                {% if action.icon %}
+                    <span class="{{ action.icon }} me-2"></span>
+                {% endif %}
+                <span>{{ action.label }}</span>
+            </a>
+        {% endfor %}
+    {% else %}
+        <div class="list-group-item text-muted small">No quick actions available.</div>
+    {% endif %}
+</div>

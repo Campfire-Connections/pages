@@ -1,0 +1,19 @@
+<div class="list-group list-group-flush generic-list">
+    {% if widget.items %}
+        {% for item in widget.items %}
+            <div class="list-group-item d-flex flex-column">
+                <div class="fw-semibold">{{ item.title }}</div>
+                {% if item.subtitle %}
+                    <div class="text-muted small">{{ item.subtitle }}</div>
+                {% endif %}
+                {% if item.url %}
+                    <div class="mt-1">
+                        <a class="btn btn-link p-0" href="{{ item.url }}">View</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="list-group-item text-muted small">{{ widget.empty_message }}</div>
+    {% endif %}
+</div>
