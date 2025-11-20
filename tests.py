@@ -36,6 +36,24 @@ class SaveLayoutViewTests(TestCase):
         layout = DashboardLayout.objects.get(user=self.user, portal_key="facility")
         self.assertIn("test-card", layout.hidden_widgets)
 
+    def test_show_widget_removes_from_hidden(self):
+        layout = DashboardLayout.objects.create(
+            user=self.user,
+            portal_key="facility",
+            hidden_widgets=["test-card", "other"],
+        )
+        self.client.force_login(self.user)
+        payload = {"action": "show_widget", "widget_key": "test-card", "portal_key": "facility"}
+        response = self.client.post(
+            reverse("save_layout"),
+            json.dumps(payload),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        layout.refresh_from_db()
+        self.assertNotIn("test-card", layout.hidden_widgets)
+        self.assertIn("other", layout.hidden_widgets)
+
     def test_invalid_action_returns_error(self):
         self.client.force_login(self.user)
         response = self.client.post(

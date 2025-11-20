@@ -40,6 +40,20 @@
 </div>
 
 <div class="dashboard-grid row g-3">
+    <div id="hiddenWidgetPanel" class="col-12 {% if not hidden_widgets %}d-none{% endif %}">
+        <div class="alert alert-warning d-flex flex-wrap align-items-center gap-2">
+            <span class="me-2"><strong>Hidden widgets:</strong></span>
+            {% if hidden_widgets %}
+                {% for widget in hidden_widgets %}
+                    <button class="btn btn-sm btn-outline-primary restore-widget" data-widget-key="{{ widget.key }}">
+                        <span class="fas fa-undo me-1"></span>{{ widget.title }}
+                    </button>
+                {% endfor %}
+            {% else %}
+                <span class="text-muted">None</span>
+            {% endif %}
+        </div>
+    </div>
     {% if widgets %}
         {% for widget in widgets %}
             <div class="col-12 col-xl-{{ widget.width|default:12 }}">
@@ -140,10 +154,25 @@
                         action: "hide_widget",
                         widget_key: key,
                         portal_key: portalKey
-                    }).catch(() => {
+                    }).then(() => window.location.reload())
+                      .catch(() => {
                         card.classList.remove("d-none");
-                    });
+                      });
                 }
+            });
+        });
+
+        document.querySelectorAll(".restore-widget").forEach(button => {
+            button.addEventListener("click", function () {
+                const key = this.dataset.widgetKey;
+                if (!key || !(window.CF && window.CF.saveDashboardPrefs)) {
+                    return;
+                }
+                window.CF.saveDashboardPrefs({
+                    action: "show_widget",
+                    widget_key: key,
+                    portal_key: portalKey
+                }).then(() => window.location.reload());
             });
         });
     })();
