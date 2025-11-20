@@ -1,5 +1,7 @@
 # core/views.py
 
+import json
+
 from django.apps import apps
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
