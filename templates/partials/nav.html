@@ -276,9 +276,17 @@
 
         <!-- ORGANIZATION / FACTION -->
         <div id="appTitleMenu" class="nav-item dropdown current-user-menu d-none d-lg-block">
-            <a href="{% url 'organization_show' organization_slug=user_profile.organization.slug %}" class="nav-link app-title " onclick="return false;">
-                {{ user_profile.organization}}
-            </a>
+            {% with org=user_profile.organization %}
+                {% if org and org.slug %}
+                    <a href="{% url 'organization_show' organization_slug=org.slug %}" class="nav-link app-title" onclick="return false;">
+                        {{ org }}
+                    </a>
+                {% elif org %}
+                    <span class="nav-link app-title">{{ org }}</span>
+                {% else %}
+                    <span class="nav-link app-title">Organization</span>
+                {% endif %}
+            {% endwith %}
         </div>
 
         <div style="height:30px; margin:18px 7px; border-left:solid 1px #eee;" class="d-none d-lg-block"></div>
