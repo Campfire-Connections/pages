@@ -58,6 +58,11 @@ def save_layout(request):
         layout.save()
         return JsonResponse({"status": "success"})
 
+    if action == "reset_hidden":
+        layout.hidden_widgets = []
+        layout.save()
+        return JsonResponse({"status": "success", "hidden_widgets": []})
+
     return JsonResponse({"status": "error", "message": "Invalid action"}, status=400)
 
 

@@ -49,6 +49,9 @@
                         <span class="fas fa-undo me-1"></span>{{ widget.title }}
                     </button>
                 {% endfor %}
+                <button class="btn btn-sm btn-outline-danger ms-auto" id="restoreAllWidgets">
+                    <span class="fas fa-sync me-1"></span> Restore All
+                </button>
             {% else %}
                 <span class="text-muted">None</span>
             {% endif %}
@@ -160,6 +163,16 @@
                       });
                 }
             });
+        });
+
+        document.getElementById("restoreAllWidgets")?.addEventListener("click", function () {
+            if (!(window.CF && window.CF.saveDashboardPrefs)) {
+                return;
+            }
+            window.CF.saveDashboardPrefs({
+                action: "reset_hidden",
+                portal_key: portalKey
+            }).then(() => window.location.reload());
         });
 
         document.querySelectorAll(".restore-widget").forEach(button => {
