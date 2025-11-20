@@ -44,7 +44,7 @@
         {% endif %}
 
         <!-- FACTION LEADER MENU -->
-        {% if user.user_type == 'FACTION_LEADER' %}
+        {% if user.user_type == 'FACTION_LEADER' or user.user_type == 'LEADER' %}
 
         <div id="factionLeaderMenu" class="nav-item dropdown">
 
