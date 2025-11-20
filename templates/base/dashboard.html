@@ -113,6 +113,7 @@
 
         let editMode = false;
         const cards = document.querySelectorAll(".dashboard-card");
+        const portalKey = "{{ dashboard_portal_key|default:'' }}";
 
         toggleButton.addEventListener("click", function () {
             editMode = !editMode;
@@ -137,7 +138,8 @@
                 if (window.CF && window.CF.saveDashboardPrefs) {
                     window.CF.saveDashboardPrefs({
                         action: "hide_widget",
-                        widget_key: key
+                        widget_key: key,
+                        portal_key: portalKey
                     }).catch(() => {
                         card.classList.remove("d-none");
                     });
