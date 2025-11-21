@@ -923,3 +923,17 @@ a.small {
     #breadCrumb a:hover {
         color: #333
     }
+/* Quick access links */
+.quick-access .quick-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 999px;
+  margin-right: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.quick-access .quick-link:hover {
+  background: rgba(255,255,255,0.15);
+}

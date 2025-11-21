@@ -59,13 +59,21 @@
     </div>
     {% if widgets %}
         {% for widget in widgets %}
-            <div class="col-12 col-xl-{{ widget.width|default:12 }}">
+            <div class="dashboard-card-column col-12 col-xl-{{ widget.width|default:12 }}" data-widget-key="{{ widget.key }}">
                 <section class="dashboard-card card h-100" id="{{ widget.slug }}">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h3 class="card-title mb-0">{{ widget.title }}</h3>
                         <button class="btn btn-light btn-sm widget-toggle-btn d-none" data-widget-key="{{ widget.key }}">
                             <span class="fas fa-times"></span>
                         </button>
+                        <div class="btn-group widget-move-controls d-none" role="group">
+                            <button class="btn btn-light btn-sm widget-move-up" type="button" title="Move up">
+                                <span class="fas fa-arrow-up"></span>
+                            </button>
+                            <button class="btn btn-light btn-sm widget-move-down" type="button" title="Move down">
+                                <span class="fas fa-arrow-down"></span>
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body">
                         {% if widget.template %}
@@ -136,13 +144,29 @@
             editMode = !editMode;
             cards.forEach(card => {
                 const btn = card.querySelector(".widget-toggle-btn");
+                const moveControls = card.querySelector(".widget-move-controls");
                 if (btn) {
                     btn.classList.toggle("d-none", !editMode);
+                }
+                if (moveControls) {
+                    moveControls.classList.toggle("d-none", !editMode);
                 }
             });
             toggleButton.classList.toggle("btn-outline-secondary", !editMode);
             toggleButton.classList.toggle("btn-danger", editMode);
             toggleButton.innerHTML = editMode ? '<span class="fas fa-check"></span> Done' : '<span class="fas fa-sliders-h"></span> Customize';
+            if (!editMode) {
+                const order = Array.from(document.querySelectorAll(".dashboard-card-column"))
+                    .map(col => col.dataset.widgetKey)
+                    .filter(Boolean);
+                if (window.CF && window.CF.saveDashboardPrefs) {
+                    window.CF.saveDashboardPrefs({
+                        action: "save_layout",
+                        layout: order,
+                        portal_key: portalKey
+                    });
+                }
+            }
         });
 
         document.querySelectorAll(".widget-toggle-btn").forEach(button => {
@@ -187,6 +211,28 @@
                     portal_key: portalKey
                 }).then(() => window.location.reload());
             });
+        });
+
+        function moveCard(button, direction) {
+            const card = button.closest(".dashboard-card");
+            if (!card) return;
+            const column = card.closest(".dashboard-card-column");
+            if (!column) return;
+            const sibling = direction === "up" ? column.previousElementSibling : column.nextElementSibling;
+            if (sibling && sibling.classList.contains("dashboard-card-column")) {
+                if (direction === "up") {
+                    column.parentNode.insertBefore(column, sibling);
+                } else {
+                    column.parentNode.insertBefore(sibling, column);
+                }
+            }
+        }
+
+        document.querySelectorAll(".widget-move-up").forEach(btn => {
+            btn.addEventListener("click", () => moveCard(btn, "up"));
+        });
+        document.querySelectorAll(".widget-move-down").forEach(btn => {
+            btn.addEventListener("click", () => moveCard(btn, "down"));
         });
     })();
 </script>

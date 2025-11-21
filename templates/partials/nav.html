@@ -56,6 +56,19 @@
     {% endblock main_nav %}
     </div>
 
+    {% if quick_menu_items %}
+    <div class="navbar-nav quick-access ms-lg-3">
+        <span class="nav-link text-muted small">Quick Access:</span>
+        {% for item in quick_menu_items %}
+            {% if item.url %}
+                <a class="nav-link quick-link" href="{{ item.url }}">
+                    {% if item.icon %}<span class="{{ item.icon }} me-1"></span>{% endif %}
+                    {{ item.label }}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
 
     </div>
     <div class="navbar-nav main-navbar-right float-end">

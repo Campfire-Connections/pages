@@ -70,6 +70,18 @@ class SaveLayoutViewTests(TestCase):
         layout = DashboardLayout.objects.get(user=self.user, portal_key="facility")
         self.assertEqual(layout.hidden_widgets, [])
 
+    def test_save_layout_accepts_list(self):
+        self.client.force_login(self.user)
+        payload = {"action": "save_layout", "portal_key": "facility", "layout": ["a", "b"]}
+        response = self.client.post(
+            reverse("save_layout"),
+            json.dumps(payload),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        layout = DashboardLayout.objects.get(user=self.user, portal_key="facility")
+        self.assertEqual(json.loads(layout.layout), ["a", "b"])
+
     def test_invalid_action_returns_error(self):
         self.client.force_login(self.user)
         response = self.client.post(

@@ -53,8 +53,12 @@ def save_layout(request):
         layout.save()
         return JsonResponse({"status": "success", "hidden_widgets": layout.hidden_widgets})
 
-    if layout_data := data.get("layout"):
-        layout.layout = layout_data
+    layout_data = data.get("layout")
+    if layout_data is not None:
+        if isinstance(layout_data, list):
+            layout.layout = json.dumps(layout_data)
+        else:
+            layout.layout = layout_data
         layout.save()
         return JsonResponse({"status": "success"})
 
