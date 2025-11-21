@@ -58,7 +58,7 @@
                 <a class="dropdown-item" href="#">
                     <span class="fas fa-users fa-fw"></span> View Roster
                 </a>
-                <a class="dropdown-item" href="{% url 'factions:enrollments' faction_slug=user.faction.slug %}">
+                <a class="dropdown-item" href="{% url 'factions:enrollments:index' user_profile.faction.slug %}">
                     <span class="fas fa-calendar-alt fa-fw"></span> Manage Enrollments
                 </a>
 
