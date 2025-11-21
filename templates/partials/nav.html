@@ -191,14 +191,17 @@
     </div>
   </div>
 
-{% if user.is_authenticated %}
+{% if user.is_authenticated and toggle_nav_favorite_url %}
 <script>
 (function () {
     const navElement = document.getElementById("mainNavbar");
     if (!navElement) {
         return;
     }
-    const favoriteEndpoint = "{% url 'toggle_nav_favorite' %}";
+    const favoriteEndpoint = "{{ toggle_nav_favorite_url|escapejs }}";
+    if (!favoriteEndpoint) {
+        return;
+    }
 
     function getCookie(name) {
         let cookieValue = null;
