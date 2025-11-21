@@ -2,7 +2,7 @@
 {% load static %}
 {% load my_filters %}
 
-<nav class="navbar navbar-expand-lg navbar-dark main-navbar">
+<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark main-navbar">
     <button id="mainNavbarMenuButton" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar-collapse-1" aria-controls="main-navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="main-navbar-collapse-1">
         <div class="navbar-nav">
@@ -22,32 +22,48 @@
                         </a>
                         <div class="dropdown-menu main-nav-dropdown">
                             {% for child in item.children %}
-                                {% if child.url %}
-                                    <a class="dropdown-item" href="{{ child.url }}">
-                                        {% if child.icon %}<span class="{{ child.icon }} fa-fw"></span>{% endif %}
-                                        {{ child.label }}
-                                    </a>
-                                {% else %}
-                                    <span class="dropdown-item text-muted">
-                                        {% if child.icon %}<span class="{{ child.icon }} fa-fw"></span>{% endif %}
-                                        {{ child.label }}
-                                    </span>
-                                {% endif %}
+                                <div class="dropdown-item d-flex align-items-center justify-content-between gap-2">
+                                    {% if child.url %}
+                                        <a class="flex-grow-1 text-decoration-none" href="{{ child.url }}">
+                                            {% if child.icon %}<span class="{{ child.icon }} fa-fw"></span>{% endif %}
+                                            {{ child.label }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted flex-grow-1">
+                                            {% if child.icon %}<span class="{{ child.icon }} fa-fw"></span>{% endif %}
+                                            {{ child.label }}
+                                        </span>
+                                    {% endif %}
+                                    {% if child.key %}
+                                        {% with pinned=favorite_menu_keys|contains:child.key %}
+                                            <button type="button" class="btn btn-link btn-sm text-muted menu-pin-btn" data-menu-pin="{{ child.key }}" data-pinned="{{ pinned|yesno:'true,false' }}" aria-label="{% if pinned %}Remove from quick access{% else %}Add to quick access{% endif %}">
+                                                <span class="fas fa-thumbtack pin-indicator {% if pinned %}text-primary{% endif %}"></span>
+                                            </button>
+                                        {% endwith %}
+                                    {% endif %}
+                                </div>
                             {% endfor %}
                         </div>
                     </div>
                 {% else %}
-                    <div class="nav-item">
+                    <div class="nav-item d-flex align-items-center">
                         {% if item.url %}
-                            <a class="nav-link" href="{{ item.url }}">
+                            <a class="nav-link flex-grow-1" href="{{ item.url }}">
                                 {% if item.icon %}<span class="{{ item.icon }} tab-icon"></span>{% endif %}
                                 <span class="tab-text">{{ item.label }}</span>
                             </a>
                         {% else %}
-                            <span class="nav-link text-muted">
+                            <span class="nav-link text-muted flex-grow-1">
                                 {% if item.icon %}<span class="{{ item.icon }} tab-icon"></span>{% endif %}
                                 <span class="tab-text">{{ item.label }}</span>
                             </span>
+                        {% endif %}
+                        {% if item.key %}
+                            {% with pinned=favorite_menu_keys|contains:item.key %}
+                                <button type="button" class="btn btn-link btn-sm text-muted menu-pin-btn" data-menu-pin="{{ item.key }}" data-pinned="{{ pinned|yesno:'true,false' }}" aria-label="{% if pinned %}Remove from quick access{% else %}Add to quick access{% endif %}">
+                                    <span class="fas fa-thumbtack pin-indicator {% if pinned %}text-primary{% endif %}"></span>
+                                </button>
+                            {% endwith %}
                         {% endif %}
                     </div>
                 {% endif %}
@@ -61,10 +77,17 @@
         <span class="nav-link text-muted small">Quick Access:</span>
         {% for item in quick_menu_items %}
             {% if item.url %}
-                <a class="nav-link quick-link" href="{{ item.url }}">
-                    {% if item.icon %}<span class="{{ item.icon }} me-1"></span>{% endif %}
-                    {{ item.label }}
-                </a>
+                <div class="nav-item d-flex align-items-center quick-link-item">
+                    <a class="nav-link quick-link flex-grow-1" href="{{ item.url }}">
+                        {% if item.icon %}<span class="{{ item.icon }} me-1"></span>{% endif %}
+                        {{ item.label }}
+                    </a>
+                    {% if item.favorite and item.key %}
+                        <button type="button" class="btn btn-link btn-sm text-muted menu-pin-btn" data-menu-pin="{{ item.key }}" data-pinned="true" aria-label="Remove from quick access">
+                            <span class="fas fa-times pin-indicator"></span>
+                        </button>
+                    {% endif %}
+                </div>
             {% endif %}
         {% endfor %}
     </div>
@@ -167,4 +190,70 @@
         {% endif %}
     </div>
   </div>
+
+{% if user.is_authenticated %}
+<script>
+(function () {
+    const navElement = document.getElementById("mainNavbar");
+    if (!navElement) {
+        return;
+    }
+    const favoriteEndpoint = "{% url 'toggle_nav_favorite' %}";
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i += 1) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    navElement.addEventListener("click", function (event) {
+        const pinButton = event.target.closest("[data-menu-pin]");
+        if (!pinButton) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        const menuKey = pinButton.getAttribute("data-menu-pin");
+        if (!menuKey) {
+            return;
+        }
+        const pinned = pinButton.getAttribute("data-pinned") === "true";
+        fetch(favoriteEndpoint, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: JSON.stringify({
+                key: menuKey,
+                action: pinned ? "remove" : "add",
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Request failed");
+                }
+                return response.json();
+            })
+            .then((payload) => {
+                if (payload.status === "success") {
+                    window.location.reload();
+                }
+            })
+            .catch((error) => {
+                console.error("Navigation favorite toggle failed", error);
+            });
+    });
+})();
+</script>
+{% endif %}
 </nav>

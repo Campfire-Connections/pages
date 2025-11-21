@@ -43,6 +43,11 @@ urlpatterns = [
         name="dynamic-dropdown-options",
     ),
     path("save-layout/", views.save_layout, name="save_layout"),
+    path(
+        "navigation/favorite/",
+        views.toggle_nav_favorite,
+        name="toggle_nav_favorite",
+    ),
     # Misc
     # path("reports/", views.ReportView.as_view(), name="reports"),
     path("resources/", views.ResourceView.as_view(), name="resources"),

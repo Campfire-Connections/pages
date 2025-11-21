@@ -7,9 +7,11 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 from core.models.messaging import Message, Notification
 from core.models.dashboard import DashboardLayout
+from core.models.navigation import NavigationPreference
 from .forms import MessageForm
 
 
@@ -68,6 +70,39 @@ def save_layout(request):
         return JsonResponse({"status": "success", "hidden_widgets": []})
 
     return JsonResponse({"status": "error", "message": "Invalid action"}, status=400)
+
+
+@login_required
+@require_POST
+def toggle_nav_favorite(request):
+    try:
+        payload = json.loads(request.body.decode("utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        payload = request.POST
+
+    key = payload.get("key") or payload.get("menu_key")
+    if not key:
+        return JsonResponse(
+            {"status": "error", "message": "Missing menu key"}, status=400
+        )
+
+    action = (payload.get("action") or "add").lower()
+    preferences, _ = NavigationPreference.objects.get_or_create(user=request.user)
+
+    if action == "remove":
+        preferences.remove_favorite(key)
+        state = "removed"
+    else:
+        preferences.add_favorite(key)
+        state = "added"
+
+    return JsonResponse(
+        {
+            "status": "success",
+            "state": state,
+            "favorites": preferences.favorite_keys,
+        }
+    )
 
 
 @login_required
