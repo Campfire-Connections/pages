@@ -92,15 +92,20 @@ def toggle_nav_favorite(request):
     if action == "remove":
         preferences.remove_favorite(key)
         state = "removed"
+        pinned = False
     else:
         preferences.add_favorite(key)
         state = "added"
+        pinned = True
 
+    favorite_keys = preferences.favorite_keys
     return JsonResponse(
         {
             "status": "success",
             "state": state,
-            "favorites": preferences.favorite_keys,
+            "pinned": pinned,
+            "favorite_keys": favorite_keys,
+            "favorites": favorite_keys,
         }
     )
 

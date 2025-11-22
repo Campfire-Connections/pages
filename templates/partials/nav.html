@@ -218,6 +218,31 @@
         return cookieValue;
     }
 
+    function updatePinState(button, pinned) {
+        if (!button) {
+            return;
+        }
+        button.setAttribute("data-pinned", pinned ? "true" : "false");
+        button.setAttribute(
+            "aria-label",
+            pinned ? "Remove from quick access" : "Add to quick access"
+        );
+        const icon = button.querySelector(".pin-indicator");
+        if (!icon) {
+            return;
+        }
+        if (icon.classList.contains("fa-times")) {
+            if (!pinned) {
+                const quickItem = button.closest(".quick-link-item");
+                if (quickItem) {
+                    quickItem.remove();
+                }
+            }
+            return;
+        }
+        icon.classList.toggle("text-primary", pinned);
+    }
+
     navElement.addEventListener("click", function (event) {
         const pinButton = event.target.closest("[data-menu-pin]");
         if (!pinButton) {
@@ -248,9 +273,10 @@
                 return response.json();
             })
             .then((payload) => {
-                if (payload.status === "success") {
-                    window.location.reload();
+                if (payload.status !== "success") {
+                    throw new Error("Server rejected toggle");
                 }
+                updatePinState(pinButton, Boolean(payload.pinned));
             })
             .catch((error) => {
                 console.error("Navigation favorite toggle failed", error);

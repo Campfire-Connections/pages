@@ -118,6 +118,7 @@ class ToggleNavFavoriteViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         pref = NavigationPreference.objects.get(user=self.user)
         self.assertIn("factions.dashboard", pref.favorite_keys)
+        self.assertTrue(response.json()["pinned"])
 
     def test_remove_favorite_discards_key(self):
         pref = NavigationPreference.objects.create(
@@ -131,6 +132,7 @@ class ToggleNavFavoriteViewTests(TestCase):
         pref.refresh_from_db()
         self.assertEqual(pref.favorite_keys, ["reports.index"])
         self.assertEqual(response.json()["state"], "removed")
+        self.assertFalse(response.json()["pinned"])
 
     def test_missing_key_returns_error(self):
         response = self._post({"action": "add"})
