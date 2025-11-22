@@ -5,6 +5,9 @@ from django.urls import reverse
 
 from django.contrib.auth import get_user_model
 from core.models.dashboard import DashboardLayout
+from core.models.navigation import NavigationPreference
+from core.tests import mute_profile_signals
+from organization.models import Organization
 
 User = get_user_model()
 
@@ -90,3 +93,76 @@ class SaveLayoutViewTests(TestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
+
+
+class ToggleNavFavoriteViewTests(TestCase):
+    def setUp(self):
+        with mute_profile_signals():
+            self.user = User.objects.create_user(
+                username="nav.user",
+                password="pass1234",
+                user_type=User.UserType.LEADER,
+            )
+        self.url = reverse("toggle_nav_favorite")
+
+    def _post(self, payload):
+        self.client.force_login(self.user)
+        return self.client.post(
+            self.url,
+            json.dumps(payload),
+            content_type="application/json",
+        )
+
+    def test_add_favorite_creates_preference(self):
+        response = self._post({"key": "factions.dashboard"})
+        self.assertEqual(response.status_code, 200)
+        pref = NavigationPreference.objects.get(user=self.user)
+        self.assertIn("factions.dashboard", pref.favorite_keys)
+
+    def test_remove_favorite_discards_key(self):
+        pref = NavigationPreference.objects.create(
+            user=self.user,
+            favorite_keys=["factions.dashboard", "reports.index"],
+        )
+        response = self._post(
+            {"key": "factions.dashboard", "action": "remove"}
+        )
+        self.assertEqual(response.status_code, 200)
+        pref.refresh_from_db()
+        self.assertEqual(pref.favorite_keys, ["reports.index"])
+        self.assertEqual(response.json()["state"], "removed")
+
+    def test_missing_key_returns_error(self):
+        response = self._post({"action": "add"})
+        self.assertEqual(response.status_code, 400)
+
+
+class DynamicDropdownTests(TestCase):
+    def test_options_are_filtered_by_parent(self):
+        parent = Organization.objects.create(
+            name="Test Council",
+            abbreviation="TC",
+            max_depth=3,
+        )
+        child = Organization.objects.create(
+            name="Test District",
+            abbreviation="TD",
+            parent=parent,
+            max_depth=3,
+        )
+        Organization.objects.create(
+            name="Other District",
+            abbreviation="OD",
+            max_depth=3,
+        )
+
+        response = self.client.get(
+            reverse(
+                "dynamic-dropdown-options",
+                args=("organization", "organization", "parent", parent.id),
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()["options"]
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["value"], child.id)
