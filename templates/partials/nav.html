@@ -37,8 +37,8 @@
                                                 {{ child.label }}
                                             </span>
                                         {% endif %}
-                                        {% if child.key %}
-                                            {% with pinned=favorite_menu_keys|contains:child.key %}
+                                        {% if child.key and child.key != "dashboard" %}
+                                        {% with pinned=favorite_menu_keys|contains:child.key %}
                                                 <button type="button" class="btn btn-link btn-sm text-muted menu-pin-btn" data-menu-pin="{{ child.key }}" data-pinned="{{ pinned|yesno:'true,false' }}" aria-label="{% if pinned %}Remove from quick access{% else %}Add to quick access{% endif %}">
                                                     <span class="fas fa-thumbtack pin-indicator {% if pinned %}text-primary{% endif %}"></span>
                                                 </button>
@@ -62,7 +62,7 @@
                                 <span class="tab-text">{{ item.label }}</span>
                             </span>
                         {% endif %}
-                        {% if item.key %}
+                        {% if item.key and item.key != "dashboard" %}
                             {% with pinned=favorite_menu_keys|contains:item.key %}
                                 <button type="button" class="btn btn-link btn-sm text-muted menu-pin-btn" data-menu-pin="{{ item.key }}" data-pinned="{{ pinned|yesno:'true,false' }}" aria-label="{% if pinned %}Remove from quick access{% else %}Add to quick access{% endif %}">
                                     <span class="fas fa-thumbtack pin-indicator {% if pinned %}text-primary{% endif %}"></span>
