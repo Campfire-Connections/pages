@@ -1,0 +1,14 @@
+{% extends "base/layout.html" %}
+{% load render_table from django_tables2 %}
+
+{% block title_text %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="bodyHeader clearfix d-flex justify-content-between align-items-center" style="margin-bottom:8px;">
+    <div class="floatLeft">
+        <h1>Manage Users</h1>
+        <p class="text-muted mb-0">View all accounts, roles, and statuses.</p>
+    </div>
+</div>
+{% render_table table %}
+{% endblock %}

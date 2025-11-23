@@ -35,8 +35,8 @@ table th {
 }
 /* Styling for table headers */
 table thead th {
-    background-color: #003466;  /* Match the nav header background */
-    color: white;               /* Ensure the text is readable */
+    background-color: #003466 !important;  /* Match the nav header background */
+    color: white !important;               /* Ensure the text is readable */
     text-align: center;          /* Optional: Center align the header text */
     padding: 10px;               /* Optional: Add some padding */
     border-bottom: 2px solid #ffffff; /* Optional: Border for contrast */
