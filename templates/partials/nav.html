@@ -34,7 +34,7 @@
                                         {% else %}
                                             <span class="text-muted flex-grow-1">
                                                 {% if child.icon %}<span class="{{ child.icon }} fa-fw"></span>{% endif %}
-                                                {{ child.label }}
+                                                {% if child.key and child.key != "dashboard" %}{{ child.label }}{% endif %}
                                             </span>
                                         {% endif %}
                                         {% if child.key and child.key != "dashboard" %}
