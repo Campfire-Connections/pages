@@ -2,6 +2,7 @@
 {% load static %}
 {% load my_filters %}
 {% load render_table from django_tables2 %}
+{% load tz %}
 {% block title_text %}{{object.name|pluralize_word:True}}{% endblock title_text %}
 
 {% block stylesheets_local %}
@@ -12,22 +13,27 @@
 {% endblock stylesheets_local %}
 
 {% block content %}
+<br />
 <div class="bodyHeader clearfix d-flex justify-content-between align-items-center" style="margin-bottom:8px;">
     <div class="floatLeft">
         <h1>My Dashboard</h1>
-    </div>
+    
     {% if request.user.is_authenticated %}
-    <div>
-        <button class="btn btn-outline-secondary btn-sm" id="toggleEditWidgets">
-            <span class="fas fa-sliders-h"></span> Customize
+        &nbsp;
+        <button class="btn btn-outline-secondary btn-sm" id="toggleEditWidgets" alt="Customize Dashboard" title="Customize Dashboard">
+            <span class="fas fa-sliders-h"></span>
         </button>
-    </div>
-    {% endif %}
+
+    {% endif %}</div>
 </div>
 <div class="bodyHeaderFooter clearfix">
     <div class="row">
         <div class="col-4 col-md-6">
-            <p style="margin-top:5px;"><span id="ctl00_MainContent_lblDate">Saturday, January 25, 2025</span></p>
+            <p style="margin-top:5px;">
+                <span id="ctl00_MainContent_lblDate">
+                    <span>{% now "l, F j, Y" %}</span>
+                </span>
+            </p>
         </div>
         <div class="col-8 col-md-6">
             <div class="float-right">

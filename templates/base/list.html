@@ -15,7 +15,7 @@
     <div class="d-flex justify-content-between align-items-center">
         <div>
             <h1>
-                <span id="lblPageTitle">{% block objects_title %}{{object.name|pluralize_word:True}}{% endblock objects_title %}</span>
+                <span id="lblPageTitle">{% block objects_title %}{{object.name|pluralize_word:True|default:"List"|title}}{% endblock objects_title %}</span>
             </h1>
         </div>
         <div>
