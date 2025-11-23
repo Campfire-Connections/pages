@@ -1,0 +1,38 @@
+{% extends "base/layout.html" %}
+
+{% block title_text %}Edit User{% endblock %}
+
+{% block content %}
+<div class="bodyHeader clearfix d-flex justify-content-between align-items-center" style="margin-bottom:8px;">
+    <div class="floatLeft">
+        <h1>Edit {{ user_obj.get_full_name|default:user_obj.username }}</h1>
+        <p class="text-muted mb-0">Update portal user details</p>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-outline-secondary" href="{% url 'admin_user_detail' username=user_obj.username %}">
+            <i class="fas fa-arrow-left"></i> Cancel
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group mb-3">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|join:", " }}</div>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
