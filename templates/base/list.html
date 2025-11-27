@@ -1,8 +1,9 @@
 {% extends 'base/layout.html' %}
 {% load static %}
+{% load i18n %}
 {% load my_filters %}
 {% load render_table from django_tables2 %}
-{% block title_text %}{{object.name|pluralize_word:True}}{% endblock title_text %}
+{% block title_text %}{{ object.name|default:"List"|pluralize_word:True|title }}{% endblock title_text %}
 
 {% block stylesheets_local %}
     {{ block.super }}
@@ -15,24 +16,35 @@
     <div class="d-flex justify-content-between align-items-center">
         <div>
             <h1>
-                <span id="lblPageTitle">{% block objects_title %}{{object.name|pluralize_word:True|default:"List"|title}}{% endblock objects_title %}</span>
+                <span id="lblPageTitle">{% block objects_title %}{{ object.name|default:"List"|pluralize_word:True|title }}{% endblock objects_title %}</span>
             </h1>
         </div>
         <div>
-            <a class="btn btn-secondary" href="{% block new_url %}new{% endblock new_url %}">
-                <span class="fas fa-fw fa-plus-square" style="color:#15b508;"></span>
-                New {% block object_type %}{{object.name|title}}{% endblock object_type %}
+            <a class="btn btn-secondary" href="{% block new_url %}{{ new_url|default:'new' }}{% endblock new_url %}">
+                <span class="fas fa-fw fa-plus-square text-success"></span>
+                {% block new_label %}{% blocktrans with obj=object.name|title %}New {{ obj }}{% endblocktrans %}{% endblock new_label %}
             </a>
         </div>
     </div>
 </div>
 
 <div class="body-content">
-    <span id="lblErrorMessage"></span>
-    {% if table %}
+    <span id="lblErrorMessage" role="alert" aria-live="polite"></span>
+
+    {% if messages %}
+        <div class="alert-container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block table_caption %}{% if table_caption %}<p class="sr-only">{{ table_caption }}</p>{% endif %}{% endblock table_caption %}
+
+    {% if table and table.rows|length %}
         {% render_table table %}
     {% else %}
-        <p>No data available to display.</p>
+        <p>{% trans "No data available to display." %}</p>
     {% endif %}
 </div>
 {% endblock content %}
