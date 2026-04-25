@@ -937,3 +937,7 @@ a.small {
 .quick-access .quick-link:hover {
   background: rgba(255,255,255,0.15);
 }
+/* Hide legacy top nav bar in favor of the new rail */
+.main-navbar {
+  display: none !important;
+}

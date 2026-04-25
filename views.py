@@ -6,7 +6,6 @@ from django.apps import apps
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 from core.models.messaging import Message, Notification
@@ -24,7 +23,6 @@ class ResourceView(TemplateView):
 
 
 @login_required
-@csrf_exempt
 def save_layout(request):
     if request.method != "POST":
         return JsonResponse({"status": "error"}, status=400)
@@ -170,8 +168,29 @@ def notifications(request):
     )
 
 
+@login_required
 def dynamic_dropdown_options(request, app_label, model_name, field_name, filter_value):
+    allowed_models = {
+        ("organization", "organization"),
+        ("facility", "facility"),
+        ("facility", "quarters"),
+        ("faction", "faction"),
+        ("course", "course"),
+        ("enrollment", "facilityenrollment"),
+    }
+    model_key = (app_label.lower(), model_name.lower())
+    if model_key not in allowed_models:
+        return JsonResponse({"error": "Model not allowed"}, status=400)
+
     Model = apps.get_model(app_label, model_name)
+    try:
+        model_field = Model._meta.get_field(field_name)
+    except Exception:
+        return JsonResponse({"error": "Field not allowed"}, status=400)
+
+    if not model_field.is_relation:
+        return JsonResponse({"error": "Field is not a relation"}, status=400)
+
     filter_field_name = f"{field_name}__id"
     options = Model.objects.filter(**{filter_field_name: filter_value})
     response_data = [{"value": obj.pk, "text": str(obj)} for obj in options]

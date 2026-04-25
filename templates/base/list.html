@@ -11,24 +11,15 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
 {% endblock stylesheets_local %}
 
-{% block content %}
-<div class="bodyHeader">
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <h1>
-                <span id="lblPageTitle">{% block objects_title %}{{ object.name|default:"List"|pluralize_word:True|title }}{% endblock objects_title %}</span>
-            </h1>
-        </div>
-        <div>
-            <a class="btn btn-secondary" href="{% block new_url %}{{ new_url|default:'new' }}{% endblock new_url %}">
-                <span class="fas fa-fw fa-plus-square text-success"></span>
-                {% block new_label %}{% blocktrans with obj=object.name|title %}New {{ obj }}{% endblocktrans %}{% endblock new_label %}
-            </a>
-        </div>
-    </div>
-</div>
+{% block page_actions %}
+<a class="btn btn-primary" href="{% block new_url %}{{ new_url|default:'new' }}{% endblock new_url %}">
+    <span class="fas fa-fw fa-plus-square"></span>
+    {% block new_label %}{% blocktrans with obj=object.name|title %}New {{ obj }}{% endblocktrans %}{% endblock new_label %}
+</a>
+{% endblock page_actions %}
 
-<div class="body-content">
+{% block content %}
+<div class="content-card">
     <span id="lblErrorMessage" role="alert" aria-live="polite"></span>
 
     {% if messages %}

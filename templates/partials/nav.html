@@ -1,292 +1,117 @@
-<!-- partials/nav.html -->
 {% load static %}
 {% load my_filters %}
 
-<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark main-navbar">
-    <button id="mainNavbarMenuButton" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar-collapse-1" aria-controls="main-navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-    <div class="collapse navbar-collapse" id="main-navbar-collapse-1">
-        <div class="navbar-nav">
-
-        {% block main_nav %}
-
-        {% if user.is_authenticated %}
-            {% for item in menu_items %}
-                {% if item.children %}
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle main-nav-dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">
-                            {% if item.icon %}
-                                <span class="{{ item.icon }} tab-icon"></span>
-                            {% endif %}
-                            <span class="tab-text">{{ item.label }}</span>
-                            <i class="fas fa-chevron-down lm5"></i>
-                        </a>
-                        <div class="dropdown-menu main-nav-dropdown">
-                            {% for child in item.children %}
-                                {% if child.separator %}
-                                    <div role="separator" class="dropdown-divider"></div>
-                                {% else %}
-                                    <div class="dropdown-item d-flex align-items-center justify-content-between gap-2">
-                                        {% if child.url %}
-                                            <a class="flex-grow-1 text-decoration-none" href="{{ child.url }}">
-                                                {% if child.icon %}<span class="{{ child.icon }} fa-fw"></span>{% endif %}
-                                                {{ child.label }}
-                                            </a>
-                                        {% else %}
-                                            <span class="text-muted flex-grow-1">
-                                                {% if child.icon %}<span class="{{ child.icon }} fa-fw"></span>{% endif %}
-                                                {% if child.key and child.key != "dashboard" %}{{ child.label }}{% endif %}
-                                            </span>
-                                        {% endif %}
-                                        {% if child.key and child.key != "dashboard" %}
-                                        {% with pinned=favorite_menu_keys|contains:child.key %}
-                                                <button type="button" class="btn btn-link btn-sm text-muted menu-pin-btn" data-menu-pin="{{ child.key }}" data-pinned="{{ pinned|yesno:'true,false' }}" aria-label="{% if pinned %}Remove from quick access{% else %}Add to quick access{% endif %}">
-                                                    <span class="fas fa-thumbtack pin-indicator {% if pinned %}text-primary{% endif %}"></span>
-                                                </button>
-                                            {% endwith %}
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="nav-item d-flex align-items-center">
-                        {% if item.url %}
-                            <a class="nav-link flex-grow-1" href="{{ item.url }}">
-                                {% if item.icon %}<span class="{{ item.icon }} tab-icon"></span>{% endif %}
-                                <span class="tab-text">{{ item.label }}</span>
-                            </a>
-                        {% else %}
-                            <span class="nav-link text-muted flex-grow-1">
-                                {% if item.icon %}<span class="{{ item.icon }} tab-icon"></span>{% endif %}
-                                <span class="tab-text">{{ item.label }}</span>
-                            </span>
-                        {% endif %}
-                        {% if item.key and item.key != "dashboard" %}
-                            {% with pinned=favorite_menu_keys|contains:item.key %}
-                                <button type="button" class="btn btn-link btn-sm text-muted menu-pin-btn" data-menu-pin="{{ item.key }}" data-pinned="{{ pinned|yesno:'true,false' }}" aria-label="{% if pinned %}Remove from quick access{% else %}Add to quick access{% endif %}">
-                                    <span class="fas fa-thumbtack pin-indicator {% if pinned %}text-primary{% endif %}"></span>
-                                </button>
-                            {% endwith %}
-                        {% endif %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-    {% endblock main_nav %}
+<div class="nav-shell">
+    <div class="nav-brand">
+        <button class="rail-toggle" id="railToggle" aria-label="Toggle navigation">
+            <span class="fas fa-bars"></span>
+        </button>
+        <a class="brand-link" href="{% url 'dashboard' %}">
+            <img src="{% static 'images/logo_text_white.png' %}" alt="Campfire Connections" class="brand-mark">
+        </a>
     </div>
 
-    {% if quick_menu_items %}
-    <div class="navbar-nav quick-access ms-lg-3">
-        <span class="nav-link text-muted small">Quick Access:</span>
-        {% for item in quick_menu_items %}
-            {% if item.url %}
-                <div class="nav-item d-flex align-items-center quick-link-item">
-                    <a class="nav-link quick-link flex-grow-1" href="{{ item.url }}">
-                        {% if item.icon %}<span class="{{ item.icon }} me-1"></span>{% endif %}
-                        {{ item.label }}
-                    </a>
-                    {% if item.favorite and item.key %}
-                        <button type="button" class="btn btn-link btn-sm text-muted menu-pin-btn" data-menu-pin="{{ item.key }}" data-pinned="true" aria-label="Remove from quick access">
-                            <span class="fas fa-times pin-indicator"></span>
-                        </button>
-                    {% endif %}
+    {% if user.is_authenticated %}
+    <div class="nav-section">
+        <div class="nav-links">
+        {% for item in menu_items %}
+            {% if item.children %}
+                <div class="nav-group" data-open="false">
+                    <button class="nav-group-toggle" aria-expanded="false">
+                        {% if item.icon %}<span class="{{ item.icon }} nav-icon"></span>&nbsp;{% endif %}
+                        <span class="nav-text">{{ item.label|default_if_none:""|nbsp }}</span>
+                        <span class="fas fa-chevron-down caret"></span>
+                    </button>
+                    <div class="nav-group-children">
+                        {% for child in item.children %}
+                            {% if child.separator %}
+                                <div role="separator" class="nav-separator"></div>
+                            {% else %}
+                                <a class="nav-link is-child" href="{{ child.url|default:'#' }}" data-menu-key="{{ child.key }}">
+                                    {% if child.icon %}<span class="{{ child.icon }} nav-icon"></span>&nbsp;{% endif %}
+                                    <span class="nav-text">{{ child.label|default_if_none:""|nbsp }}</span>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
+            {% else %}
+                <a class="nav-link" href="{{ item.url|default:'#' }}" data-menu-key="{{ item.key }}">
+                    {% if item.icon %}<span class="{{ item.icon }} nav-icon"></span>&nbsp;{% endif %}
+                    <span class="nav-text">{{ item.label|default_if_none:""|nbsp }}</span>
+                </a>
             {% endif %}
         {% endfor %}
+        </div>
+    </div>
+
+    <div class="nav-section user-section">
+        <div class="nav-user">
+            <div class="avatar">
+                <img src="{% static 'images/avatar/default.png' %}" alt="User avatar">
+            </div>
+            <div class="user-meta">
+                <div class="user-name">{{ user.first_name|title }} {{ user.last_name|title }}</div>
+                <a class="user-link" href="{% url 'account_settings' %}">Profile &amp; Preferences</a>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <a class="nav-link subtle" href="{% url 'account_settings' %}"><span class="fas fa-cog nav-icon"></span><span class="nav-text">Settings</span></a>
+            <a class="nav-link subtle" href="#" onclick="document.getElementById('logout-form').submit(); return false;"><span class="fa fa-sign-out nav-icon"></span><span class="nav-text">Sign Out</span></a>
+            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none;">{% csrf_token %}</form>
+        </div>
     </div>
     {% endif %}
+</div>
 
-    </div>
-    <div class="navbar-nav main-navbar-right float-end">
-        {% if user.is_authenticated %}
-        <!-- SEARCH TAB //-->
-        <div class="nav-item">
-            <div class="my-3 mr-2">
-                <div class="input-group">
-                    <input type="search" id="txtGlobalSearch" class="form-control" placeholder="Search for..." cols="15" autocomplete="off">
-                    <div id="txtGlobalSearchInfo" class="input-group-text" data-bs-toggle="tooltip" data-bs-html="true" title="">
-                        <span id="searchInfoIcon" class="fa fa-info-circle fa-fw mt-1"></span>
-                        <span id="searchLoadingIcon" class="fa fa-spinner fa-spin fa-fw"></span>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-
-        <!-- BOOKMARKS ICON -->
-        <div class="nav-item dropdown icon-only-tab bookmark-tab d-none d-md-block">
-            <a href="#" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" title="Bookmarks">
-                <span class="tab-icon fas fa-bookmark fa-fw" style="line-height:20px;"></span><span class="tab-text"> Bookmarks</span>
-            </a>
-            <div class="dropdown-menu" id="bookmarks-menu">
-                <a class="dropdown-item" href="#" id="add-bookmark"><span class="fas fa-bookmark fa-fw mr-1" style="color:#15b508;"></span> Bookmark This Page</a>
-                <div role="separator" class="dropdown-divider"></div>
-                <h6 class="dropdown-header">Saved Bookmarks</h6>
-                
-                        <a id="no-bookmarks"  class="dropdown-item disabled">You don't have any bookmarks.</a>
-                        
-            </div>
-        </div>
-
-        <div style="height:30px; margin:18px 7px; border-left:solid 1px #eee;" class="d-none d-lg-block"></div>
-
-        <!-- ORGANIZATION / FACTION -->
-        <div id="appTitleMenu" class="nav-item dropdown current-user-menu d-none d-lg-block">
-            {% with org=user_profile.organization %}
-                {% if org and org.slug %}
-                    <a href="{% url 'organization_show' organization_slug=org.slug %}" class="nav-link app-title" onclick="return false;">
-                        {{ org }}
-                    </a>
-                {% elif org %}
-                    <span class="nav-link app-title">{{ org }}</span>
-                {% else %}
-                    <span class="nav-link app-title">Organization</span>
-                {% endif %}
-            {% endwith %}
-        </div>
-
-        <div style="height:30px; margin:18px 7px; border-left:solid 1px #eee;" class="d-none d-lg-block"></div>
-
-        <!-- USER MENU -->
-        <div class="nav-item dropdown current-user-menu">
-            <a id="user-avatar-tab" href="#" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-beamer-click=”false”>
-                <div style="display:table-row;">
-                    <div class="user-avatar" style="display:table-cell; width:30px; height:48px;">
-                        
-                                <img src="{% static 'images/avatar/default.png' %}" style="height:30px; width:30px; margin-top:9px;" />
-                        
-                    </div>
-                </div>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-item" style="padding-top:10px; padding-bottom:10px;">
-                    <div class="d-flex">
-                        <div class="user-avatar" style="width:40px;">
-                            
-                                    <img src="{% static 'images/avatar/default.png' %}" style="height:30px; width:30px;" />
-                            
-                        </div>
-                        <div class="user-display-name" style="vertical-align:top; width:140px;">
-                            <div><strong>{{ user.first_name | title }} {{ user.last_name | title}}</strong></div>
-                            
-                            <div><a class="small" href="{% url 'account_settings' %}">Edit Profile &amp; Preferences</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="dropdown-item">
-                    <hr style="margin:5px 0;" />
-                </div>
-                <a class="dropdown-item" id="settings" href="{% url 'account_settings' %}"><i class="fas fa-cog fa-fw"></i> Settings</a>
-                <a class="dropdown-item" id="beamer-icon" href="#"><i class="fa fa-envelope fa-fw"></i> Notifications</a>
-                <a class="dropdown-item" href="#"><i class="fa fa-question-circle fa-fw"></i> Help</a>
-                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
-                    {% csrf_token %}
-                </form>
-                
-                <a class="dropdown-item" id="logout" href="#" onclick="document.getElementById('logout-form').submit();">
-                    <span class="fa fa-sign-out fa-fw"></span> Sign Out
-                </a>
-                
-                
-            </div>
-        </div>
-        {% endif %}
-    </div>
-  </div>
-
-{% if user.is_authenticated and toggle_nav_favorite_url %}
+{% if user.is_authenticated %}
 <script>
 (function () {
-    const navElement = document.getElementById("mainNavbar");
-    if (!navElement) {
-        return;
-    }
-    const favoriteEndpoint = "{{ toggle_nav_favorite_url|escapejs }}";
-    if (!favoriteEndpoint) {
-        return;
-    }
+    const rail = document.querySelector(".app-rail");
+    const nav = document.querySelector(".nav-shell");
+    const toggleButton = document.getElementById("railToggle");
+    const mobileToggleButton = document.getElementById("mobileRailToggle");
+    const body = document.body;
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            const cookies = document.cookie.split(";");
-            for (let i = 0; i < cookies.length; i += 1) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + "=")) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
+    nav.addEventListener("click", function (event) {
+        const groupToggle = event.target.closest(".nav-group-toggle");
+        if (groupToggle) {
+            event.preventDefault();
+            const group = groupToggle.closest(".nav-group");
+            const open = group.getAttribute("data-open") === "true";
+            group.setAttribute("data-open", open ? "false" : "true");
+            groupToggle.setAttribute("aria-expanded", open ? "false" : "true");
         }
-        return cookieValue;
-    }
-
-    function updatePinState(button, pinned) {
-        if (!button) {
-            return;
-        }
-        button.setAttribute("data-pinned", pinned ? "true" : "false");
-        button.setAttribute(
-            "aria-label",
-            pinned ? "Remove from quick access" : "Add to quick access"
-        );
-        const icon = button.querySelector(".pin-indicator");
-        if (!icon) {
-            return;
-        }
-        if (icon.classList.contains("fa-times")) {
-            if (!pinned) {
-                const quickItem = button.closest(".quick-link-item");
-                if (quickItem) {
-                    quickItem.remove();
-                }
-            }
-            return;
-        }
-        icon.classList.toggle("text-primary", pinned);
-    }
-
-    navElement.addEventListener("click", function (event) {
-        const pinButton = event.target.closest("[data-menu-pin]");
-        if (!pinButton) {
-            return;
-        }
-        event.preventDefault();
-        event.stopPropagation();
-        const menuKey = pinButton.getAttribute("data-menu-pin");
-        if (!menuKey) {
-            return;
-        }
-        const pinned = pinButton.getAttribute("data-pinned") === "true";
-        fetch(favoriteEndpoint, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken"),
-            },
-            body: JSON.stringify({
-                key: menuKey,
-                action: pinned ? "remove" : "add",
-            }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Request failed");
-                }
-                return response.json();
-            })
-            .then((payload) => {
-                if (payload.status !== "success") {
-                    throw new Error("Server rejected toggle");
-                }
-                updatePinState(pinButton, Boolean(payload.pinned));
-            })
-            .catch((error) => {
-                console.error("Navigation favorite toggle failed", error);
-            });
     });
+
+    function setCollapsed(shouldCollapse) {
+        rail.setAttribute("data-collapsed", shouldCollapse ? "true" : "false");
+        body.classList.toggle("rail-collapsed", shouldCollapse);
+        localStorage.setItem("cf.railCollapsed", shouldCollapse ? "true" : "false");
+    }
+
+    function toggleRail() {
+        const collapsed = rail.getAttribute("data-collapsed") === "true";
+        setCollapsed(!collapsed);
+    }
+
+    if (rail) {
+        if (toggleButton) {
+            toggleButton.addEventListener("click", toggleRail);
+        }
+        if (mobileToggleButton) {
+            mobileToggleButton.addEventListener("click", toggleRail);
+        }
+        rail.addEventListener("click", function (event) {
+            const link = event.target.closest("a.nav-link");
+            if (link && window.matchMedia("(max-width: 1024px)").matches) {
+                setCollapsed(false);
+            }
+        });
+        const saved = localStorage.getItem("cf.railCollapsed");
+        const shouldCollapse = saved === "true";
+        setCollapsed(shouldCollapse);
+    }
 })();
 </script>
 {% endif %}
-</nav>

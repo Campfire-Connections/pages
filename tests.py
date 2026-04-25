@@ -141,6 +141,12 @@ class ToggleNavFavoriteViewTests(TestCase):
 
 class DynamicDropdownTests(TestCase):
     def test_options_are_filtered_by_parent(self):
+        user = User.objects.create_user(
+            username="dropdown.user",
+            password="pass1234",
+            user_type=User.UserType.ADMIN,
+        )
+        self.client.force_login(user)
         parent = Organization.objects.create(
             name="Test Council",
             abbreviation="TC",

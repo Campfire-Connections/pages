@@ -1,150 +1,141 @@
 {% extends 'base/layout.html' %}
+{% load static %}
+
+{% block head_title %}Camp Operations, Connected{% endblock head_title %}
+{% block body_class %}splash-page{% endblock body_class %}
 
 {% block stylesheets_local %}
 {{ block.super }}
-{% load static %}
-<style>
-    .hero {
-        background: url('{% static "images/landing/hero.png" %}') no-repeat center center;
-        background-size: cover;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        color: black;
-        text-align: center;
-    }
-    .hero h1 {
-        font-size: 4em;
-        font-weight: bold;
-    }
-    .hero p {
-        font-size: 1.5em;
-        margin-top: 20px;
-    }
-    .features, .about, .contact {
-        padding: 60px 0;
-    }
-    .features h2, .about h2, .contact h2 {
-        margin-bottom: 30px;
-    }
-    .features img {
-        max-width: 50%;
-    }
-    .about img {
-        max-width: 100%;
-        height: auto;
-    }
-    .drop-shadow {
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="{% static 'css/splash.css' %}">
 {% endblock stylesheets_local %}
 
-{% block header_wrapper %}
-<header>
-{% block header %}
-<div class="container">
-    <div class="logo">
-        <a href="{% url 'home' %}">
-            <img src="{% static 'images/logo_text_white.png' %}" alt="Campfire Connections Logo" class="logo">
+{% block body %}
+<main class="splash-shell">
+    <header class="splash-nav" aria-label="Landing navigation">
+        <a class="splash-brand" href="{% url 'index' %}">
+            <img src="{% static 'images/logo_text_white.png' %}" alt="Campfire Connections">
         </a>
-    </div>
-    <nav>
-        <ul>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#testimonials">Testimonials</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
-    <div class="auth-buttons">
-        <a href="{% url 'login'  %}" class="btn login">Log In</a>
-        <a href="{% url 'signup'  %}" class="btn signup">Sign Up</a>
-    </div>
-</div>
-{% endblock header %}
-</header>
-{% endblock header_wrapper %}
+        <nav class="splash-links" aria-label="Page sections">
+            <a href="#platform">Platform</a>
+            <a href="#workflows">Workflows</a>
+            <a href="#roles">Roles</a>
+        </nav>
+        <div class="splash-actions">
+            <a class="splash-link-button" href="{% url 'login' %}">Log In</a>
+            <a class="splash-primary-button" href="{% url 'signup' %}">Request Access</a>
+        </div>
+    </header>
 
-{% block content %}
-<!-- Hero Section -->
-<section class="hero">
-    <div>
-        <h1 class="drop-shadow">Campfire Connections</h1>
-        <p class="drop-shadow">Connecting Camps, Creating Memories</p>
-        <a href="#features" class="btn btn-primary btn-lg mt-4">Learn More</a>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section id="features" class="features bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 text-center">
-                <img src="{% static 'images/landing/feature_1.png' %}" alt="Feature 1 Icon" class="mb-3">
-                <h2>Multi-Portal Access</h2>
-                <p>Our system allows different organizations to manage their own camps through separate portals.</p>
-            </div>
-            <div class="col-md-4 text-center">
-                <img src="{% static 'images/landing/feature_3.png' %}" alt="Feature 2 Icon" class="mb-3">
-                <h2>Comprehensive Scheduling</h2>
-                <p>Schedule activities, facilities, and staff across multiple camps seamlessly.</p>
-            </div>
-            <div class="col-md-4 text-center">
-                <img src="{% static 'images/landing/feature_2.png' %}" alt="Feature 3 Icon" class="mb-3">
-                <h2>User-Friendly Interface</h2>
-                <p>Easy-to-use interface for campers, camp leaders, and administrators.</p>
+    <section class="splash-hero">
+        <div class="splash-hero-copy">
+            <p class="splash-kicker">Council, camp, and training operations</p>
+            <h1>One screen for seasons, sessions, people, places, and classes.</h1>
+            <p class="splash-lede">
+                Campfire Connections coordinates facilities, factions, leaders, attendees,
+                faculty, enrollments, and reports without pushing teams back into spreadsheets.
+            </p>
+            <div class="splash-cta">
+                <a class="splash-primary-button large" href="{% url 'signup' %}">Start Planning</a>
+                <a class="splash-secondary-button large" href="#platform">See The Flow</a>
             </div>
         </div>
-    </div>
-</section>
 
-<!-- About Section -->
-<section id="about" class="about">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>About Campfire Connections</h2>
-                <p>Campfire Connections is dedicated to making the summer camp experience smooth and enjoyable for everyone involved. Our platform is designed to handle the complexities of managing multiple camps, facilities, and activities.</p>
+        <aside class="splash-command-card" aria-label="Operational snapshot">
+            <div class="command-header">
+                <span>Season Command</span>
+                <strong>Week 3</strong>
             </div>
-            <div class="col-md-6">
-                <img src="{% static 'images/landing/about.png' %}" alt="About Image">
+            <div class="command-grid">
+                <div>
+                    <strong>142</strong>
+                    <span>attendees placed</span>
+                </div>
+                <div>
+                    <strong>28</strong>
+                    <span>classes staffed</span>
+                </div>
+                <div>
+                    <strong>94%</strong>
+                    <span>quarters assigned</span>
+                </div>
+                <div>
+                    <strong>6</strong>
+                    <span>reports ready</span>
+                </div>
             </div>
+            <div class="command-timeline">
+                <span style="--size: 72%">Factions rostered</span>
+                <span style="--size: 88%">Faculty coverage</span>
+                <span style="--size: 64%">Quarter capacity</span>
+            </div>
+        </aside>
+    </section>
+
+    <section id="platform" class="splash-section platform-band">
+        <div class="section-heading">
+            <p class="splash-kicker">Platform shape</p>
+            <h2>Built around the operating model, not a generic CRM.</h2>
         </div>
-    </div>
-</section>
+        <div class="feature-grid">
+            <article class="feature-card">
+                <img src="{% static 'images/splash/multi_orgs.png' %}" alt="">
+                <h3>Multi-organization structure</h3>
+                <p>Model councils, districts, camps, facilities, and departments with labels that match how each organization talks.</p>
+            </article>
+            <article class="feature-card">
+                <img src="{% static 'images/splash/scheduling_tracking.png' %}" alt="">
+                <h3>Capacity-aware scheduling</h3>
+                <p>Plan weeks, periods, classes, quarters, and enrollments with overbooking checks close to the data.</p>
+            </article>
+            <article class="feature-card">
+                <img src="{% static 'images/splash/facility_mgmt.png' %}" alt="">
+                <h3>Facility and faction portals</h3>
+                <p>Give leaders, faculty, attendees, and admins a focused dashboard instead of one crowded back office.</p>
+            </article>
+        </div>
+    </section>
 
-<!-- Contact Section -->
-<section id="contact" class="contact bg-light">
-    <div class="container">
-        <h2>Contact Us</h2>
-        <form action="submit_form_url" method="POST">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="message">Message</label>
-                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Send Message</button>
-        </form>
-    </div>
-</section>
-{% endblock content %}
+    <section id="workflows" class="splash-section workflow-section">
+        <div class="workflow-copy">
+            <p class="splash-kicker">Daily flow</p>
+            <h2>From registration to reporting, the handoffs stay visible.</h2>
+            <p>
+                Dashboards surface rosters, schedules, open actions, resources, and saved navigation.
+                Reports turn the current operating picture into exportable snapshots.
+            </p>
+        </div>
+        <div class="workflow-list">
+            <div><span>01</span> Stand up organizations, facilities, factions, and course catalogs.</div>
+            <div><span>02</span> Open sessions, weeks, periods, quarters, and class capacity.</div>
+            <div><span>03</span> Place leaders, attendees, and faculty against live availability.</div>
+            <div><span>04</span> Monitor dashboards and generate operational reports.</div>
+        </div>
+    </section>
 
-{% block footer %}
-<footer>
-    <p>Contact Us: email@example.com</p>
-    <div class="social">
-        <a href="#">Facebook</a>
-        <a href="#">Twitter</a>
-        <a href="#">Instagram</a>
-    </div>
-</footer>
-{% endblock %}
+    <section id="roles" class="splash-section role-band">
+        <div class="role-card">
+            <strong>Admins</strong>
+            <span>configure programs, users, reports, and navigation.</span>
+        </div>
+        <div class="role-card">
+            <strong>Facilities</strong>
+            <span>manage quarters, departments, faculty, and class delivery.</span>
+        </div>
+        <div class="role-card">
+            <strong>Factions</strong>
+            <span>track crews, leaders, attendees, and weekly assignments.</span>
+        </div>
+        <div class="role-card">
+            <strong>Attendees</strong>
+            <span>see schedules, enrollments, resources, and next actions.</span>
+        </div>
+    </section>
+
+    <footer class="splash-footer">
+        <span>Campfire Connections</span>
+        <a href="{% url 'privacy_policy' %}">Privacy</a>
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'login' %}">Log In</a>
+    </footer>
+</main>
+{% endblock body %}

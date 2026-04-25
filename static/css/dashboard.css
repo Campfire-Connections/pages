@@ -226,6 +226,14 @@ section.top_row section.active_enrollment {
     text-align: center;
     border: 1px solid #e0eefc;
 }
+.theme-dark .dashboard-card .metric-card {
+    background: #1f1f24;
+    border: 1px solid #000000;
+}
+.theme-dark .dashboard-card .metric-label,
+.theme-dark .dashboard-card .metric-value {
+    color: #ffffff;
+}
 
 .dashboard-card .metric-label {
     font-size: 0.85rem;

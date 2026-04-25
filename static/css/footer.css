@@ -1,41 +1,29 @@
 footer {
-    background-color: #8B4513 !important;
-    color: #FFFFFF;
+    background-color: #f6f4ef;
+    color: #111827;
     text-align: center;
-    /*padding: 10px 20px;*/
     clear: both;
-    margin: 0px auto;
-    text-align: center;
-    border-top: 1px solid #AAA;
-    bottom: 0px;
-    color: #ffffff;
+    margin: 0 auto;
+    border-top: 1px solid #e5e7eb;
     font-size: 0.833333em;
-    padding: 5px 0px;
-    position: fixed;
-    left: 0px;
+    padding: 8px 0;
     width: 100%;
-    height: 35px;
 }
 footer:after {
-    clear:both;
-    content:".";
-    display:block;
-    height:0;
-    visibility:hidden;
-}
-footer a { color: #87ceeb; }
-.copyright {
-    float: left;
-    left: 0px;
-    padding-left: 10px;
-}
-.footer-links {
-    float: right;
-    right: 10px;
-    position: relative;
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
 }
 footer a {
-    color: #FFFFFF;
+    color: inherit;
     text-decoration: none;
     margin: 0 10px;
+}
+
+.theme-dark footer {
+    background-color: #0a0f1a;
+    color: #e5e7eb;
+    border-top: 1px solid #000;
 }
