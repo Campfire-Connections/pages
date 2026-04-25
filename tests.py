@@ -94,6 +94,16 @@ class SaveLayoutViewTests(TestCase):
         )
         self.assertEqual(response.status_code, 400)
 
+    def test_invalid_json_returns_error(self):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse("save_layout"),
+            "{invalid-json",
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["message"], "Invalid JSON payload")
+
 
 class ToggleNavFavoriteViewTests(TestCase):
     def setUp(self):

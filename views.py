@@ -28,7 +28,13 @@ def save_layout(request):
         return JsonResponse({"status": "error"}, status=400)
 
     user = request.user
-    data = json.loads(request.body.decode("utf-8"))
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JsonResponse(
+            {"status": "error", "message": "Invalid JSON payload"},
+            status=400,
+        )
     action = data.get("action")
     widget_key = data.get("widget_key")
     portal_key = data.get("portal_key") or data.get("portal") or request.GET.get(
