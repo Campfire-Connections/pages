@@ -6,9 +6,9 @@
     function updateUserTypeFields() {
         var userType = document.getElementById("id_user_type").value;
         // Show/hide additional fields based on user type
-        document.getElementById("additional_fields_leader").style.display = userType === 'Leader' ? 'block' : 'none';
-        document.getElementById("additional_fields_attendee").style.display = userType === 'Attendee' ? 'block' : 'none';
-        document.getElementById("additional_fields_faculty").style.display = userType === 'Faculty' ? 'block' : 'none';
+        document.getElementById("additional_fields_leader").style.display = userType === 'LEADER' ? 'block' : 'none';
+        document.getElementById("additional_fields_attendee").style.display = userType === 'ATTENDEE' ? 'block' : 'none';
+        document.getElementById("additional_fields_faculty").style.display = userType === 'FACULTY' ? 'block' : 'none';
     }
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("id_user_type").addEventListener('change', updateUserTypeFields);
