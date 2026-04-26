@@ -1,18 +1,23 @@
-<!-- templates/home.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Home</title>
-</head>
-<body>
-    <h1>Welcome to the Home Page!</h1>
-    <p>This is a basic home page for your application.</p>
+{% extends "base/layout.html" %}
+
+{% block title_text %}Home{% endblock title_text %}
+
+{% block page_actions %}
+{% if user.is_authenticated %}
+    <a class="btn btn-outline-secondary" href="{% url 'logout' %}">Log Out</a>
+{% else %}
+    <a class="btn btn-outline-secondary" href="{% url 'login' %}">Log In</a>
+    <a class="btn btn-primary" href="{% url 'register' %}">Request Access</a>
+{% endif %}
+{% endblock page_actions %}
+
+{% block content %}
+<section class="content-card">
+    <h2>Campfire Connections</h2>
     {% if user.is_authenticated %}
-        <p>Hello, {{ user.username }}!</p>
-        <a href="{% url 'logout' %}">Logout</a>
+        <p class="text-muted mb-0">Hello, {{ user.get_full_name|default:user.username }}.</p>
     {% else %}
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'register' %}">Register as Attendee</a>
+        <p class="text-muted mb-0">Coordinate camp operations from one shared system.</p>
     {% endif %}
-</body>
-</html>
+</section>
+{% endblock content %}

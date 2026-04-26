@@ -1,15 +1,12 @@
-{% extends "layout.html" %}
+{% extends "base/layout.html" %}
 
 {% block title %}Page Not Found{% endblock %}
-
-{% block header %}
-{% endblock %}
+{% block title_text %}Page Not Found{% endblock title_text %}
 
 {% block content %}
+<section class="content-card">
     <h1>Page Not Found</h1>
-    <p>These are not the droids you're looking for.</p>
-    <p><a href="{% url 'home' %}">Go somewhere nice</a></p>
-{% endblock %}
-
-{% block footer %}
+    <p class="text-muted">The page you requested does not exist or moved.</p>
+    <a class="btn btn-primary" href="{% url 'home' %}">Go Home</a>
+</section>
 {% endblock %}

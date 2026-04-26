@@ -1,16 +1,42 @@
-<!-- templates/login.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <h2>Login</h2>
-    <form method="post">
+{% extends "base/layout.html" %}
+{% load static %}
+
+{% block title_text %}Log In{% endblock title_text %}
+
+{% block stylesheets_local %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+{% endblock stylesheets_local %}
+
+{% block content %}
+<section class="content-card form-card">
+    <form method="post" class="app-form" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
+        <div class="form-card-header">
+            <div>
+                <h2>Welcome Back</h2>
+                <p class="text-muted mb-0">Sign in to manage Campfire Connections.</p>
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Log In</button>
+            <a class="btn btn-outline-secondary" href="{% url 'register' %}">Request Access</a>
+        </div>
     </form>
-    <a href="{% url 'register' %}">Don't have an account? Register as Attendee</a>
-</body>
-</html>
+</section>
+{% endblock content %}

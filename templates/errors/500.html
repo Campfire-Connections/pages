@@ -1,17 +1,12 @@
 {% extends "base/layout.html" %}
 
 {% block title %}Internal Server Error{% endblock %}
-
-{% block header %}
-{% endblock %}
+{% block title_text %}Internal Server Error{% endblock title_text %}
 
 {% block content %}
-<section>
+<section class="content-card">
     <h1>Internal Server Error</h1>
-    <p>Something blew up.</p>
-    <p><a href="{% url 'dashboard' %}">Go somewhere nice</a></p>
+    <p class="text-muted">Something went wrong while processing the request.</p>
+    <a class="btn btn-primary" href="{% url 'dashboard' %}">Go To Dashboard</a>
 </section>
-    {% endblock %}
-
-{% block footer %}
 {% endblock %}

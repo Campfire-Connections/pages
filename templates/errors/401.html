@@ -1,15 +1,12 @@
-{% extends "layout.jinja2" %}
+{% extends "base/layout.html" %}
 
 {% block title %}Unauthorized{% endblock %}
-
-{% block header %}
-{% endblock %}
+{% block title_text %}Unauthorized{% endblock title_text %}
 
 {% block content %}
+<section class="content-card">
     <h1>Unauthorized</h1>
-    <p>You're not allowed to do this.<p/>
-    <p><a href="{{ url_for('utils_bp.index') }}">Go somewhere nice</a></p>
-{% endblock %}
-
-{% block footer %}
+    <p class="text-muted">You do not have permission to access this page.</p>
+    <a class="btn btn-primary" href="{% url 'dashboard' %}">Go To Dashboard</a>
+</section>
 {% endblock %}
