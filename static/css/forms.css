@@ -1,6 +1,25 @@
-/* General Form Styling */
-form {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Theme-aware form shell */
+.app-form {
+    box-shadow: none;
+}
+
+.form-card {
+    max-width: 980px;
+}
+
+.form-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--border);
+}
+
+.form-card-header h2 {
+    margin: 0;
+    color: var(--text);
 }
 
 /* Form Labels */
@@ -8,7 +27,7 @@ label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
-    color: #333;
+    color: var(--text);
 }
 
 /* Input Fields */
@@ -22,10 +41,10 @@ select {
     padding: 10px;
     margin-bottom: 15px;
     font-size: 14px;
-    color: #333;
-    border: 1px solid #ccc;
+    color: var(--text);
+    border: 1px solid var(--border);
     border-radius: 5px;
-    background-color: #fff;
+    background-color: var(--panel);
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -36,8 +55,8 @@ input[type="password"]:focus,
 input[type="number"]:focus,
 textarea:focus,
 select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(234, 105, 0, 0.18);
     outline: none;
 }
 
@@ -48,27 +67,9 @@ textarea {
 }
 
 /* Buttons */
-button,
-input[type="submit"] {
-    display: inline-block;
-    background-color: #007bff;
-    color: #fff;
-    font-size: 16px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-button:hover,
-input[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
 button:disabled,
 input[type="submit"]:disabled {
-    background-color: #ccc;
+    background-color: var(--muted);
     cursor: not-allowed;
 }
 
@@ -118,7 +119,7 @@ select[disabled] {
 
 /* Form Fieldsets */
 fieldset {
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 20px;
@@ -127,14 +128,14 @@ fieldset {
 legend {
     font-size: 16px;
     font-weight: bold;
-    color: #333;
+    color: var(--text);
     padding: 0 5px;
 }
 
 /* Helper Text */
 .helper-text {
     font-size: 12px;
-    color: #6c757d;
+    color: var(--muted);
     margin-top: -10px;
     margin-bottom: 10px;
 }
@@ -157,8 +158,8 @@ legend {
     }
 }
 .objectButtonsBottom {
-    background-color: #e7e7e7;
-    border-top: 1px solid #ddd;
+    background-color: var(--bg);
+    border-top: 1px solid var(--border);
     padding: 10px 18px;
     text-align: left;
 }
@@ -230,8 +231,8 @@ td.formLabel {
 }
 
 .field-value {
-    background-color: #fafafa;
-    border: solid 1px #d5d5d5;
+    background-color: var(--panel);
+    border: solid 1px var(--border);
     padding: 6px 10px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -239,6 +240,32 @@ td.formLabel {
     min-height: 33px;
     word-break: break-word!important;
     word-wrap: break-word!important
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    align-items: center;
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--border);
+}
+
+.theme-dark input[type="text"],
+.theme-dark input[type="email"],
+.theme-dark input[type="password"],
+.theme-dark input[type="number"],
+.theme-dark textarea,
+.theme-dark select {
+    background-color: var(--card);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+.theme-dark input[disabled],
+.theme-dark textarea[disabled],
+.theme-dark select[disabled] {
+    background-color: #111827;
 }
 
 .field-value>* {

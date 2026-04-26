@@ -1,13 +1,15 @@
 section.card {
-    background-color: white;
+    background-color: var(--card);
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    color: var(--text);
 }
 
 #manage h2, #show h2, #list h2 {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 5px;
 }
 
@@ -22,12 +24,12 @@ table {
 }
 
 table th, table td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--border);
     padding: 8px;
 }
 
 table th {
-    background-color: #f4f4f4;
+    background-color: var(--bg);
 }
 
 .actions {
@@ -35,28 +37,29 @@ table th {
 }
 /* Styling for table headers */
 table thead th {
-    background-color: #003466 !important;  /* Match the nav header background */
-    color: white !important;               /* Ensure the text is readable */
+    background-color: var(--accent) !important;
+    color: #fff !important;
     text-align: center;          /* Optional: Center align the header text */
     padding: 10px;               /* Optional: Add some padding */
-    border-bottom: 2px solid #ffffff; /* Optional: Border for contrast */
+    border-bottom: 2px solid var(--border);
     font-weight: bold;
 }
 table thead th a {
     color: white !important;
 }
 table thead th a:hover {
-    color: #ea6900 !important;
+    color: #fff !important;
+    text-decoration: underline;
 }
 
 /* Optional: Add hover effect on table rows */
 table tbody tr:hover {
-    background-color: #f2f2f2;   /* Light grey on hover */
+    background-color: rgba(234, 105, 0, 0.08);
 }
 
 /* Optional: Style the table rows for consistent look */
 table tbody tr {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border);
 }
 
 /* Pagination Container */
@@ -77,25 +80,25 @@ table tbody tr {
     display: inline-block;
     padding: 10px 15px; /* Size the clickable area */
     text-decoration: none; /* Remove underline */
-    color: #007bff; /* Link color */
+    color: var(--accent);
     font-weight: bold;
-    border: 1px solid #ddd; /* Border for each item */
+    border: 1px solid var(--border);
     border-radius: 4px; /* Rounded corners */
     transition: all 0.3s ease; /* Smooth hover effect */
 }
 
 /* Active Page */
 .pagination .active a {
-    background-color: #007bff; /* Active background */
+    background-color: var(--accent);
     color: white; /* White text for active item */
-    border-color: #007bff; /* Match border with background */
+    border-color: var(--accent);
 }
 
 /* Hover Effect */
 .pagination a:hover {
-    background-color: #0056b3; /* Darker hover background */
+    background-color: var(--accent-strong);
     color: white; /* White text on hover */
-    border-color: #0056b3; /* Match hover border */
+    border-color: var(--accent-strong);
 }
 
 /* Next and Previous Items */
@@ -107,9 +110,13 @@ table tbody tr {
 
 /* Disabled State */
 .pagination .disabled a {
-    color: #aaa; /* Gray text */
+    color: var(--muted);
     pointer-events: none; /* Disable clicks */
-    border-color: #ddd; /* Match border */
+    border-color: var(--border);
+}
+
+.theme-dark table tbody tr:hover {
+    background-color: rgba(249, 115, 22, 0.14);
 }
 
 /* Responsive Design */
