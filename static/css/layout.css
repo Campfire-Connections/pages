@@ -108,6 +108,7 @@ body.app-shell.splash-page .app-content {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    min-width: 0;
 }
 
 .app-header {
@@ -735,6 +736,7 @@ body.app-shell.splash-page .app-content {
 
 .table-shell {
     width: 100%;
+    max-width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
