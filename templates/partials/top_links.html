@@ -4,27 +4,20 @@
 {% for item in toplinks %}
     {% if item|is_visible:user %}
         {% if item.icon %}
-    <li class="icon"><a href="{% url item.url_name %}" alt="{{ item.title }}"><i class="fas {{ item.icon }}"></i></a></li>
+    <li class="icon"><a href="{% url item.url_name %}" aria-label="{{ item.title }}" title="{{ item.title }}"><i class="fas {{ item.icon }}" aria-hidden="true"></i></a></li>
         {% else %}
     <li><a href="{% url item.url_name %}">{{ item.title }}</a></li>
         {% endif %}
     {% endif %}
 {% endfor %}
 {% if user.is_authenticated %}
-    <form method="post" action="{% url 'logout' %}" id="logout-form">
-        {% csrf_token %}
-        <!--<button type="submit" class="btn btn-primary">Logout</button>-->
-        <li class="icon"><a href="#" id="logout-btn"><i class="fas fa-arrow-right-from-bracket"></i></a></li>
-    </form>
+    <li class="icon">
+        <form method="post" action="{% url 'logout' %}" id="logout-form">
+            {% csrf_token %}
+            <button type="submit" class="link-button" aria-label="Sign Out" title="Sign Out">
+                <i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i>
+            </button>
+        </form>
+    </li>
 {% endif %}
 </ul>
-<script>
-    $(document).ready(function(){
-        $(function() {
-            $('#logout-btn').click(function(e) {
-                e.preventDefault();
-                $("#logout-form").submit();
-            });
-        });
-    });
-</script>

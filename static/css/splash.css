@@ -236,9 +236,21 @@
 .command-timeline span::after {
     content: "";
     height: 8px;
-    width: var(--size);
+    width: 100%;
     border-radius: 999px;
     background: linear-gradient(90deg, var(--ember), #ffd166);
+}
+
+.command-timeline .size-64::after {
+    width: 64%;
+}
+
+.command-timeline .size-72::after {
+    width: 72%;
+}
+
+.command-timeline .size-88::after {
+    width: 88%;
 }
 
 .splash-section {

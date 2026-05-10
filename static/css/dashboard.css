@@ -1,17 +1,75 @@
-section {
+.dashboard-shell {
+    display: grid;
+    gap: var(--space-12);
     margin-bottom: 20px;
     width: 100%;
 }
 
-.card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    margin-bottom: 20px;
+.dashboard-toolbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-12);
+    padding: var(--space-12);
+    border: 1px solid var(--border);
+    border-radius: var(--r-8);
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
 }
 
-.card h2 {
-    margin-top: 0;
+.dashboard-toolbar h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.dashboard-date {
+    margin: 0 0 2px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.dashboard-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-4);
+}
+
+.dashboard-search {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-width: 220px;
+    margin: 0;
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-8);
+    background: var(--panel);
+    color: var(--muted);
+}
+
+.dashboard-search input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    outline: none;
+}
+
+.dashboard-save-status {
+    min-width: 96px;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.dashboard-save-status[data-state="saved"] {
+    color: #207245;
+}
+
+.dashboard-save-status[data-state="error"] {
+    color: #b42318;
 }
 
 section.top_row section {
@@ -202,17 +260,28 @@ section.top_row section.active_enrollment {
 
 .dashboard-grid .dashboard-card {
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    border: none;
+    border: 1px solid var(--border);
+    border-radius: var(--r-8);
+    overflow: hidden;
 }
 
 .dashboard-card .card-header {
     background: transparent;
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1px solid var(--border);
+    gap: var(--space-8);
 }
 
 .dashboard-card .card-title {
     font-size: 1.1rem;
     font-weight: 600;
+    min-width: 0;
+}
+
+.dashboard-card-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-shrink: 0;
 }
 
 .dashboard-card .chart-wrapper {
@@ -257,6 +326,32 @@ section.top_row section.active_enrollment {
 .dashboard-card .list-group-item {
     border: none;
     border-bottom: 1px solid #f1f1f1;
+}
+
+.theme-dark .dashboard-search {
+    background: var(--card);
+}
+
+.theme-dark .dashboard-save-status[data-state="saved"] {
+    color: #86efac;
+}
+
+.theme-dark .dashboard-save-status[data-state="error"] {
+    color: #fca5a5;
+}
+
+@media (max-width: 768px) {
+    .dashboard-toolbar {
+        display: grid;
+    }
+
+    .dashboard-tools {
+        justify-content: flex-start;
+    }
+
+    .dashboard-search {
+        width: 100%;
+    }
 }
 
 .dashboard-card .list-group-item:last-child {

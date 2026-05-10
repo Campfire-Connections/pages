@@ -18,7 +18,7 @@
 
         <div>
             {% block active_enrollment_welcome_msg %}
-            <h2>Welcome <a href="#">{{ user.get_full_name | title }}</a>.</h2>  
+            <h2>Welcome <a href="{% url 'account_settings' %}">{{ user.get_full_name | title }}</a>.</h2>
             {% endblock active_enrollment_welcome_msg %}
 
             <hr />

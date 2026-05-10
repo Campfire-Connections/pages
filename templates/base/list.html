@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load my_filters %}
 {% load render_table from django_tables2 %}
-{% block title_text %}{{ object.name|default:"List"|pluralize_word:True|title }}{% endblock title_text %}
+{% block title_text %}{{ object.name|default:object_list.model_verbose_name_plural|default:"List"|pluralize_word:True|title }}{% endblock title_text %}
 
 {% block stylesheets_local %}
     {{ block.super }}
@@ -33,9 +33,50 @@
     {% block table_caption %}{% if table_caption %}<p class="sr-only">{{ table_caption }}</p>{% endif %}{% endblock table_caption %}
 
     {% if table and table.rows|length %}
+        <div class="list-toolbar" role="search">
+            <label class="visually-hidden" for="listTableFilter">{% trans "Filter table rows" %}</label>
+            <div class="list-filter">
+                <span class="fas fa-search" aria-hidden="true"></span>
+                <input id="listTableFilter" type="search" autocomplete="off" placeholder="{% trans 'Filter rows' %}" data-table-filter>
+                <button class="link-button list-filter-clear" type="button" hidden aria-label="{% trans 'Clear row filter' %}">
+                    <span class="fas fa-xmark" aria-hidden="true"></span>
+                </button>
+            </div>
+            <output id="listTableCount" class="list-count" aria-live="polite"></output>
+        </div>
+        <div class="table-shell" tabindex="0" aria-label="{{ table_caption|default:'Table data' }}">
         {% render_table table %}
+        </div>
+        <div id="listTableEmptySearch" class="empty-state d-none" aria-live="polite">
+            <span class="fas fa-filter-circle-xmark" aria-hidden="true"></span>
+            <p>{% trans "No rows match the current filter." %}</p>
+        </div>
     {% else %}
-        <p>{% trans "No data available to display." %}</p>
+        <div class="empty-state">
+            <span class="fas fa-inbox" aria-hidden="true"></span>
+            <p>{% trans "No data available to display." %}</p>
+            <a class="btn btn-sm btn-outline-primary" href="{% block empty_new_url %}{{ new_url|default:'new' }}{% endblock empty_new_url %}">
+                {% block empty_new_label %}{% blocktrans with obj=object.name|title %}Create {{ obj }}{% endblocktrans %}{% endblock empty_new_label %}
+            </a>
+        </div>
     {% endif %}
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const filter = document.querySelector("[data-table-filter]");
+
+    if (!filter) {
+        return;
+    }
+    window.CF?.bindTableFilters(document);
+    document.addEventListener("keydown", function (event) {
+        const target = event.target;
+        const isTyping = target && ["INPUT", "SELECT", "TEXTAREA"].includes(target.tagName);
+        if (event.key === "/" && !isTyping) {
+            event.preventDefault();
+            filter.focus();
+        }
+    });
+});
+</script>
 {% endblock content %}

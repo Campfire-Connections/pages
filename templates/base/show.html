@@ -1,4 +1,3 @@
-<!-- pages/templates/base/layout.html -->
 {% extends 'base/layout.html' %}
 {% load static %}
 {% block title_text %}{{object.name | title }}{% endblock title_text %}
@@ -9,145 +8,186 @@
 {% endblock stylesheets_local %}
 
 {% block content %}
-    <div class="card object">
-        <div class="card-header">
-            {% block card_header %}
-            <div style="margin-bottom: 20px">
-                <div id="objectHeader" style="display: flex !important;">
-                    <div style="margin-right: 4px">
-                        <h1>
-                            <span class="object-identifier">
-                                {% block object_identifier %}{{ object.pk | title }}{% endblock object_identifier %}
-                            </span>
-                        </h1>
-                    </div>
-                    <div style="flex-grow: 1 !important;">
-                        <div style="float: right; display: flex !important; margin-left: 30px;">
-                            <div style="margin-right: .25rem !important;">
-                                <div style="display: flex !important;">
-                                    <div class="btn-group" role="group"></div>
-                                </div>
-                            </div>
-                            <div style="margin: 0 15px">
-                                <button id="addCommentButton" class="add-comment btn btn-secondary" title="Add Comment">
-                                    <span class="fa fa-fw fa-comment fa-alignment-fix comment-icon-color"></span>
-                                </button>
-                                <button type="button" id="printButton" class="print btn btn-secondary" title="Print">
-                                    <span class="fa fa-fw fa-print"></span>
-                                </button>
-                            </div>
-                            <div id="objectMoreActionsButtonMenu" class="dropdown" style="display: inline-block">
-                                    <button id="objectMoreActionsButton" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="fas fa-fw fa-bars"></span>
-                                        Actions
-                                    </button>
-                                <div class="dropdown-menu dropdown-menu-right" style="">
-                                    <a href="#" class="dropdown-item change-status">
-                                        <span class="fas fa-fw fa-check-circle status-change-icon-color"></span>
-                                        Change Status
-                                    </a>
-                                    <a href="#" class="dropdown-item add-comment">
-                                        <span class="fas fa-fw fa-comment fa-alignment-fix comment-icon-color"></span>
-                                        Add Comment
-                                    </a>
-                                    <a id="header_addFaculty" class="dropdown-item" href="#">
-                                        <span class="fas fa-fw fa-arrow-right"></span>
-                                        Assign {{ organization_labels.faculty_label | title}}
-                                    </a>
-                                    <div role="separator" class="dropdown-divider"></div>
-                                    <a href="#" class="dropdown-item print">
-                                        <span class="fas fa-fw fa-print lm1"></span> 
-                                        Print
-                                    </a>
-                                    <div role="separator" class="dropdown-divider"></div>
-                                    <a href="#" class="dropdown-item">
-                                        <span class="fas fa-fw fa-copy"></span> 
-                                        Clone
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <span class="fas fa-fw fa-edit"></span> 
-                                        Edit
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <h1>{% block object_name %}{{ object.name | title }}{% endblock object_name %}</h1><br>
-                        <h2>{% block object_details %}<br>{% endblock object_details %}</h2>
-                        <div style="display: flex !important; font-size: 11px; color: #999; margin-top: 15px;">
-                            <div>
-                                <strong>Created: </strong>
-                                <span title="Created by {{object.created_by}}">{{object.created_at}}</span>
-                            </div>
-                            <div style="margin-left: 20px;">
-                                <strong>Other Detail </strong>blah
-                            </div>
-                            <div style="margin-left: 20px;">
-                                <strong>Other Detail: </strong>blah blah
-                        </div>
-                    </div>
+<section class="card object">
+    <div class="card-header">
+        {% block card_header %}
+        <div class="object-header" id="objectHeader">
+            <div class="object-title-group">
+                <div class="object-kicker">
+                    {% block object_identifier %}{{ object.pk | title }}{% endblock object_identifier %}
                 </div>
-            </div>
-            {% endblock card_header %}
-
-            {% block object_nav_tabs_wrapper %}
-            <div id="objectTabBar" class="objectNav">
-                <ul class="nav nav-tabs nav-bordered">
-                    {% block object_nav_tabs %}
-                    {% block object_nav_tab_overview %}
-                    <li class="nav-item" role="presentation">
-                        <a href="#overviewTab" id="tabs_tabOverview" class="nav-link active" data-bs-toggle="tab">Overview</a>
-                    </li>
-                    {% endblock object_nav_tab_overview %}
-
-                    {% endblock object_nav_tabs %}
-                </ul>
-            </div>
-            {% endblock object_nav_tabs_wrapper %}
-        </div>
-        <div style="display: flex !important;" class="tab-content">
-            {% block card_body_wrapper %}
-            <div style="flex-grow: 1 !important" id="overviewTab" class="tab-pane fade show active">
-                {% block card_body_overview %}
-                <div class="card-body" id="overviewCard">
-                    <h2 class="no-border card-title section-title">Detailed Description</h2>
-                    <div id="notes" class="field-value" style="width: 100%; overflow: hidden; word-break: break-word;">
-                        <span id="objectDetailedDescription" class="readmore" style="max-height: none;">
-                            {{ object.description }}
-                        </span>&nbsp;
+                <h1>{% block object_name %}{{ object.name | title }}{% endblock object_name %}</h1>
+                <div class="object-subtitle">{% block object_details %}{% endblock object_details %}</div>
+                {% if object.created_at %}
+                    <div class="object-meta">
+                        <span>
+                            <strong>Created:</strong>
+                            <span title="Created by {{ object.created_by }}">{{ object.created_at }}</span>
+                        </span>
                     </div>
-                </div>
-                {% endblock card_body_overview %}
+                {% endif %}
             </div>
-            {% endblock card_body_wrapper %}
+            <div class="object-actions" aria-label="Record actions">
+                {% block object_primary_actions %}
+                    {% block object_back_action %}
+                    <a class="btn btn-outline-secondary" href="{% block object_back_url %}{{ request.META.HTTP_REFERER|default:'/' }}{% endblock object_back_url %}">
+                        <span class="fas fa-arrow-left" aria-hidden="true"></span>
+                        Back
+                    </a>
+                    {% endblock object_back_action %}
+                    {% block object_edit_action %}{% endblock object_edit_action %}
+                    {% block object_delete_action %}{% endblock object_delete_action %}
+                {% endblock object_primary_actions %}
+                <button type="button" id="printButton" class="print btn btn-secondary" title="Print" aria-label="Print">
+                    <span class="fa fa-fw fa-print" aria-hidden="true"></span>
+                </button>
+                <button type="button" id="copyPageLinkButton" class="btn btn-outline-secondary" title="Copy Link" aria-label="Copy Link">
+                    <span class="fas fa-link" aria-hidden="true"></span>
+                    Link
+                </button>
+                {% block object_secondary_actions %}{% endblock object_secondary_actions %}
+            </div>
         </div>
+        {% endblock card_header %}
+
+        {% block object_nav_tabs_wrapper %}
+        <div id="objectTabBar" class="objectNav">
+            <ul class="nav nav-tabs nav-bordered">
+                {% block object_nav_tabs %}
+                {% block object_nav_tab_overview %}
+                <li class="nav-item" role="presentation">
+                    <a href="#overviewTab" id="tabs_tabOverview" class="nav-link active" data-bs-toggle="tab">Overview</a>
+                </li>
+                {% endblock object_nav_tab_overview %}
+                {% endblock object_nav_tabs %}
+            </ul>
+        </div>
+        {% endblock object_nav_tabs_wrapper %}
     </div>
-</div>
+    <div class="tab-content object-tab-content">
+        {% block card_body_wrapper %}
+        <div id="overviewTab" class="tab-pane fade show active">
+            {% block card_body_overview %}
+            <div class="card-body" id="overviewCard">
+                <h2 class="no-border card-title section-title">Detailed Description</h2>
+                <div id="notes" class="field-value object-description">
+                    <span id="objectDetailedDescription" class="readmore">
+                        {{ object.description|default:"No description available." }}
+                    </span>
+                </div>
+            </div>
+            {% endblock card_body_overview %}
+        </div>
+        {% endblock card_body_wrapper %}
+    </div>
+</section>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const tabs = document.querySelectorAll('a[data-bs-toggle="tab"]');
-    
-        console.log("Tabs initialized:", tabs); // Debugging
-    
-        // Check if a tab was previously selected
-        const activeTab = localStorage.getItem("activeTab");
-        if (activeTab) {
-            const activeTabElement = document.querySelector(`a[href="${activeTab}"]`);
-            if (activeTabElement) {
-                console.log("Restoring active tab:", activeTab); // Debugging
-                new bootstrap.Tab(activeTabElement).show();
-            }
-        }
-    
-        // Save the currently selected tab to localStorage
-        tabs.forEach((tab) => {
-            tab.addEventListener("shown.bs.tab", (event) => {
-                const href = event.target.getAttribute("href");
-                console.log("Tab selected:", href); // Debugging
-                localStorage.setItem("activeTab", href);
+        const storageKey = "cf.activeTab." + window.location.pathname;
+        const printButtons = document.querySelectorAll(".print, #printButton");
+        const copyPageLinkButton = document.getElementById("copyPageLinkButton");
+        const liveRegion = document.createElement("div");
+
+        liveRegion.className = "visually-hidden";
+        liveRegion.setAttribute("aria-live", "polite");
+        document.body.appendChild(liveRegion);
+
+        printButtons.forEach((button) => {
+            button.addEventListener("click", (event) => {
+                event.preventDefault();
+                window.print();
             });
         });
+
+        if (copyPageLinkButton && window.navigator?.clipboard) {
+            copyPageLinkButton.addEventListener("click", function () {
+                window.navigator.clipboard.writeText(window.location.href).then(function () {
+                    liveRegion.textContent = "Page link copied.";
+                }).catch(function () {
+                    liveRegion.textContent = "Unable to copy page link.";
+                });
+            });
+        } else if (copyPageLinkButton) {
+            copyPageLinkButton.hidden = true;
+        }
+
+        function storageGet(key) {
+            try {
+                return window.localStorage.getItem(key);
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function storageSet(key, value) {
+            try {
+                window.localStorage.setItem(key, value);
+            } catch (error) {
+                return;
+            }
+        }
+
+        function activateTab(tab) {
+            const href = tab.getAttribute("href");
+            const panel = href ? document.querySelector(href) : null;
+            if (!panel) {
+                return;
+            }
+
+            tabs.forEach((candidate) => {
+                const candidateHref = candidate.getAttribute("href");
+                const candidatePanel = candidateHref ? document.querySelector(candidateHref) : null;
+                const active = candidate === tab;
+
+                candidate.classList.toggle("active", active);
+                candidate.setAttribute("aria-selected", active ? "true" : "false");
+                if (candidatePanel) {
+                    candidatePanel.classList.toggle("active", active);
+                    candidatePanel.classList.toggle("show", active);
+                }
+            });
+            storageSet(storageKey, href);
+        }
+
+        const activeTab = storageGet(storageKey);
+        if (activeTab) {
+            const activeTabElement = document.querySelector(`a[href="${activeTab}"]`);
+            const activePanel = document.querySelector(activeTab);
+            if (activeTabElement && activePanel && !activeTabElement.closest("[hidden]")) {
+                if (window.bootstrap?.Tab) {
+                    new bootstrap.Tab(activeTabElement).show();
+                } else {
+                    activateTab(activeTabElement);
+                }
+            } else {
+                storageSet(storageKey, "");
+            }
+        }
+
+        tabs.forEach((tab) => {
+            const href = tab.getAttribute("href");
+            const panelId = href && href.startsWith("#") ? href.slice(1) : "";
+            tab.setAttribute("role", "tab");
+            if (panelId) {
+                tab.setAttribute("aria-controls", panelId);
+            }
+            tab.setAttribute("aria-selected", tab.classList.contains("active") ? "true" : "false");
+            tab.addEventListener("click", (event) => {
+                if (window.bootstrap?.Tab) {
+                    return;
+                }
+                event.preventDefault();
+                activateTab(tab);
+            });
+            if (window.bootstrap?.Tab) {
+                tab.addEventListener("shown.bs.tab", (event) => {
+                    const href = event.target.getAttribute("href");
+                    storageSet(storageKey, href);
+                });
+            }
+        });
     });
-    
 </script>
 
 {% endblock content %}

@@ -27,16 +27,29 @@
             </div>
         </div>
 
-        {% if form.non_field_errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ form.non_field_errors }}
+        {% if form.errors %}
+            <div class="alert alert-danger form-error-summary" role="alert" tabindex="-1">
+                <strong>Review the highlighted fields.</strong>
+                {% if form.non_field_errors %}
+                    {{ form.non_field_errors }}
+                {% endif %}
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li><a href="#{{ field.id_for_label }}">{{ field.label }}: {{ error }}</a></li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
             </div>
         {% endif %}
 
         {% block object_base_details %}
             {% for field in form %}
                 <div class="field">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                        {% if field.field.required %}<span class="required-marker" aria-hidden="true">*</span><span class="visually-hidden">required</span>{% endif %}
+                    </label>
                     {{ field }}
                     {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -58,4 +71,44 @@
         </div>
     </form>
 </section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector(".app-form");
+    const summary = document.querySelector(".form-error-summary");
+    const invalidField = document.querySelector(".field .error");
+
+    if (summary) {
+        summary.focus();
+    } else if (invalidField) {
+        const field = invalidField.closest(".field")?.querySelector("input, select, textarea");
+        if (field) {
+            field.focus();
+        }
+    }
+
+    if (!form) {
+        return;
+    }
+
+    form.querySelectorAll(".field").forEach(function (fieldWrapper) {
+        const field = fieldWrapper.querySelector("input, select, textarea");
+        if (field && fieldWrapper.querySelector(".error")) {
+            field.setAttribute("aria-invalid", "true");
+        }
+    });
+
+    form.addEventListener("submit", function () {
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (form.dataset.submitted === "true") {
+            return;
+        }
+        form.dataset.submitted = "true";
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.dataset.originalText = submitButton.textContent.trim();
+            submitButton.textContent = "Saving...";
+        }
+    });
+});
+</script>
 {% endblock content %}

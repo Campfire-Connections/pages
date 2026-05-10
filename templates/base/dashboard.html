@@ -13,127 +13,114 @@
 {% endblock stylesheets_local %}
 
 {% block content %}
-<br />
-<div class="bodyHeader clearfix d-flex justify-content-between align-items-center" style="margin-bottom:8px;">
-    <div class="floatLeft">
-        <h1>My Dashboard</h1>
-    
-    {% if request.user.is_authenticated %}
-        &nbsp;
-        <button class="btn btn-outline-secondary btn-sm" id="toggleEditWidgets" alt="Customize Dashboard" title="Customize Dashboard">
-            <span class="fas fa-sliders-h"></span>
-        </button>
-
-    {% endif %}</div>
-</div>
-<div class="bodyHeaderFooter clearfix">
-    <div class="row">
-        <div class="col-4 col-md-6">
-            <p style="margin-top:5px;">
-                <span id="ctl00_MainContent_lblDate">
-                    <span>{% now "l, F j, Y" %}</span>
-                </span>
-            </p>
+<section class="dashboard-shell" aria-labelledby="dashboardHeading">
+    <div class="dashboard-toolbar">
+        <div>
+            <p class="dashboard-date">{% now "l, F j, Y" %}</p>
+            <h2 id="dashboardHeading">My Dashboard</h2>
         </div>
-        <div class="col-8 col-md-6">
-            <div class="float-right">
-                <div class="form-inline">
-                    
-                </div>
-            </div>
+        <div class="dashboard-tools">
+            <label class="dashboard-search">
+                <span class="fas fa-search" aria-hidden="true"></span>
+                <span class="visually-hidden">Filter dashboard widgets</span>
+                <input id="dashboardWidgetSearch" type="search" placeholder="Filter widgets" autocomplete="off">
+            </label>
+            {% if request.user.is_authenticated %}
+                <button class="btn btn-outline-secondary btn-sm" id="toggleEditWidgets" type="button" title="Customize Dashboard" aria-pressed="false">
+                    <span class="fas fa-sliders-h" aria-hidden="true"></span>
+                    <span class="button-label">Customize</span>
+                </button>
+            {% endif %}
+            <div id="dashboardSaveStatus" class="dashboard-save-status" role="status" aria-live="polite"></div>
         </div>
     </div>
-</div>
 
-<div class="dashboard-grid row g-3">
-    <div id="hiddenWidgetPanel" class="col-12 {% if not hidden_widgets %}d-none{% endif %}">
+    <div id="hiddenWidgetPanel" class="{% if not hidden_widgets %}d-none{% endif %}">
         <div class="alert alert-warning d-flex flex-wrap align-items-center gap-2">
             <span class="me-2"><strong>Hidden widgets:</strong></span>
             {% if hidden_widgets %}
                 {% for widget in hidden_widgets %}
-                    <button class="btn btn-sm btn-outline-primary restore-widget" data-widget-key="{{ widget.key }}">
-                        <span class="fas fa-undo me-1"></span>{{ widget.title }}
+                    <button class="btn btn-sm btn-outline-primary restore-widget" type="button" data-widget-key="{{ widget.key }}">
+                        <span class="fas fa-undo me-1" aria-hidden="true"></span>{{ widget.title }}
                     </button>
                 {% endfor %}
-                <button class="btn btn-sm btn-outline-danger ms-auto" id="restoreAllWidgets">
-                    <span class="fas fa-sync me-1"></span> Restore All
+                <button class="btn btn-sm btn-outline-danger ms-auto" type="button" id="restoreAllWidgets">
+                    <span class="fas fa-sync me-1" aria-hidden="true"></span> Restore All
                 </button>
             {% else %}
                 <span class="text-muted">None</span>
             {% endif %}
         </div>
     </div>
-    {% if widgets %}
-        {% for widget in widgets %}
-            <div class="dashboard-card-column col-12 col-xl-{{ widget.width|default:12 }}" data-widget-key="{{ widget.key }}">
-                <section class="dashboard-card card h-100" id="{{ widget.slug }}">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h3 class="card-title mb-0">{{ widget.title }}</h3>
-                        <button class="btn btn-light btn-sm widget-toggle-btn d-none" data-widget-key="{{ widget.key }}">
-                            <span class="fas fa-times"></span>
-                        </button>
-                        <div class="btn-group widget-move-controls d-none" role="group">
-                            <button class="btn btn-light btn-sm widget-move-up" type="button" title="Move up">
-                                <span class="fas fa-arrow-up"></span>
-                            </button>
-                            <button class="btn btn-light btn-sm widget-move-down" type="button" title="Move down">
-                                <span class="fas fa-arrow-down"></span>
-                            </button>
+
+    <div class="dashboard-grid row g-3" id="dashboardGrid">
+        {% if widgets %}
+            {% for widget in widgets %}
+                <div class="dashboard-card-column col-12 col-xl-{{ widget.width|default:12 }}" data-widget-key="{{ widget.key }}" data-widget-title="{{ widget.title|lower }}">
+                    <section class="dashboard-card card h-100" id="{{ widget.slug }}" aria-labelledby="{{ widget.slug }}-title">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="card-title mb-0" id="{{ widget.slug }}-title">{{ widget.title }}</h3>
+                            <div class="dashboard-card-actions">
+                                <button class="btn btn-light btn-sm widget-toggle-btn d-none" type="button" data-widget-key="{{ widget.key }}" title="Hide {{ widget.title }}" aria-label="Hide {{ widget.title }}">
+                                    <span class="fas fa-times" aria-hidden="true"></span>
+                                </button>
+                                <div class="btn-group widget-move-controls d-none" role="group" aria-label="Move {{ widget.title }}">
+                                    <button class="btn btn-light btn-sm widget-move-up" type="button" title="Move up" aria-label="Move {{ widget.title }} up">
+                                        <span class="fas fa-arrow-up" aria-hidden="true"></span>
+                                    </button>
+                                    <button class="btn btn-light btn-sm widget-move-down" type="button" title="Move down" aria-label="Move {{ widget.title }} down">
+                                        <span class="fas fa-arrow-down" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        {% if widget.template %}
-                            {% include widget.template with widget=widget %}
-                        {% elif widget.type == "table" and widget.table %}
-                            {% render_table widget.table %}
-                        {% elif widget.type == "chart" %}
-                            <div class="chart-wrapper">
-                                <canvas id="{{ widget.chart_id }}"></canvas>
-                            </div>
-                            <script>
-                                (function() {
-                                    const ctx = document.getElementById("{{ widget.chart_id }}").getContext("2d");
-                                    const config = {{ widget.chart_config|safe }};
-                                    new Chart(ctx, config);
-                                })();
-                            </script>
-                        {% elif widget.type == "actions" %}
-                            <div class="list-group">
-                                {% for action in widget.actions %}
-                                    <a class="list-group-item list-group-item-action d-flex align-items-center" href="{{ action.url }}">
-                                        {% if action.icon %}<span class="{{ action.icon }} me-2"></span>{% endif %}
-                                        {{ action.label }}
-                                    </a>
-                                {% empty %}
-                                    <p class="text-muted mb-0">No quick actions available.</p>
-                                {% endfor %}
-                            </div>
-                        {% elif widget.type == "metrics" %}
-                            <div class="row g-3">
-                                {% for metric in widget.metrics %}
-                                    <div class="col-6">
-                                        <div class="metric-card">
-                                            <div class="metric-label">{{ metric.label }}</div>
-                                            <div class="metric-value">{{ metric.value }}</div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p class="mb-0">{{ widget.content|default:"" }}</p>
-                        {% endif %}
-                    </div>
+                        <div class="card-body">
+                            {% if widget.template %}
+                                {% include widget.template with widget=widget %}
+                            {% elif widget.type == "table" and widget.table %}
+                                <div class="table-shell" tabindex="0" aria-label="{{ widget.title }} table">
+                                    {% render_table widget.table %}
+                                </div>
+                            {% elif widget.type == "chart" %}
+                                <div class="chart-wrapper">
+                                    <canvas id="{{ widget.chart_id }}"></canvas>
+                                </div>
+                                <script type="application/json" id="{{ widget.chart_id }}-config">{{ widget.chart_config|safe }}</script>
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                        const canvas = document.getElementById("{{ widget.chart_id }}");
+                                        const configEl = document.getElementById("{{ widget.chart_id }}-config");
+                                        if (!canvas || !configEl || !window.Chart) {
+                                            return;
+                                        }
+                                        new Chart(canvas.getContext("2d"), JSON.parse(configEl.textContent));
+                                    });
+                                </script>
+                            {% elif widget.type == "actions" %}
+                                {% include "widgets/actions.html" with widget=widget %}
+                            {% elif widget.type == "metrics" %}
+                                {% include "widgets/metrics.html" with widget=widget %}
+                            {% else %}
+                                <p class="mb-0">{{ widget.content|default:"" }}</p>
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <section class="card h-100 text-center py-5">
+                    <p class="text-muted mb-0">No widgets are configured for this dashboard yet.</p>
                 </section>
             </div>
-        {% endfor %}
-{% else %}
-        <div class="col-12">
-            <section class="card h-100 text-center py-5">
-                <p class="text-muted mb-0">No widgets are configured for this dashboard yet.</p>
-            </section>
-        </div>
-    {% endif %}
-</div>
+        {% endif %}
+    </div>
+
+    <div id="dashboardEmptySearch" class="empty-state d-none" aria-live="polite">
+        <span class="fas fa-filter" aria-hidden="true"></span>
+        <p>No widgets match that filter.</p>
+    </div>
+</section>
 
 {% block javascripts_local %}
 {{ block.super }}
@@ -143,8 +130,35 @@
         if (!toggleButton) return;
 
         let editMode = false;
+        const grid = document.getElementById("dashboardGrid");
         const cards = document.querySelectorAll(".dashboard-card");
+        const searchInput = document.getElementById("dashboardWidgetSearch");
+        const emptySearch = document.getElementById("dashboardEmptySearch");
+        const status = document.getElementById("dashboardSaveStatus");
         const portalKey = "{{ dashboard_portal_key|default:'' }}";
+
+        function setStatus(message, state) {
+            if (!status) return;
+            status.textContent = message || "";
+            status.dataset.state = state || "";
+        }
+
+        function savePrefs(payload) {
+            if (!(window.CF && window.CF.saveDashboardPrefs)) {
+                setStatus("Preferences unavailable.", "error");
+                return Promise.reject();
+            }
+            setStatus("Saving...", "saving");
+            return window.CF.saveDashboardPrefs(payload)
+                .then((response) => {
+                    setStatus("Saved.", "saved");
+                    return response;
+                })
+                .catch((error) => {
+                    setStatus("Could not save.", "error");
+                    throw error;
+                });
+        }
 
         toggleButton.addEventListener("click", function () {
             editMode = !editMode;
@@ -160,18 +174,17 @@
             });
             toggleButton.classList.toggle("btn-outline-secondary", !editMode);
             toggleButton.classList.toggle("btn-danger", editMode);
-            toggleButton.innerHTML = editMode ? '<span class="fas fa-check"></span> Done' : '<span class="fas fa-sliders-h"></span> Customize';
+            toggleButton.setAttribute("aria-pressed", editMode ? "true" : "false");
+            toggleButton.innerHTML = editMode ? '<span class="fas fa-check" aria-hidden="true"></span> <span class="button-label">Done</span>' : '<span class="fas fa-sliders-h" aria-hidden="true"></span> <span class="button-label">Customize</span>';
             if (!editMode) {
                 const order = Array.from(document.querySelectorAll(".dashboard-card-column"))
                     .map(col => col.dataset.widgetKey)
                     .filter(Boolean);
-                if (window.CF && window.CF.saveDashboardPrefs) {
-                    window.CF.saveDashboardPrefs({
-                        action: "save_layout",
-                        layout: order,
-                        portal_key: portalKey
-                    });
-                }
+                savePrefs({
+                    action: "save_layout",
+                    layout: order,
+                    portal_key: portalKey
+                }).catch(() => {});
             }
         });
 
@@ -182,40 +195,35 @@
                 if (!key || !card) return;
 
                 card.classList.add("d-none");
-                if (window.CF && window.CF.saveDashboardPrefs) {
-                    window.CF.saveDashboardPrefs({
-                        action: "hide_widget",
-                        widget_key: key,
-                        portal_key: portalKey
-                    }).then(() => window.location.reload())
-                      .catch(() => {
-                        card.classList.remove("d-none");
-                      });
-                }
+                savePrefs({
+                    action: "hide_widget",
+                    widget_key: key,
+                    portal_key: portalKey
+                }).then(() => window.location.reload())
+                  .catch(() => {
+                    card.classList.remove("d-none");
+                  });
             });
         });
 
         document.getElementById("restoreAllWidgets")?.addEventListener("click", function () {
-            if (!(window.CF && window.CF.saveDashboardPrefs)) {
-                return;
-            }
-            window.CF.saveDashboardPrefs({
+            savePrefs({
                 action: "reset_hidden",
                 portal_key: portalKey
-            }).then(() => window.location.reload());
+            }).then(() => window.location.reload()).catch(() => {});
         });
 
         document.querySelectorAll(".restore-widget").forEach(button => {
             button.addEventListener("click", function () {
                 const key = this.dataset.widgetKey;
-                if (!key || !(window.CF && window.CF.saveDashboardPrefs)) {
+                if (!key) {
                     return;
                 }
-                window.CF.saveDashboardPrefs({
+                savePrefs({
                     action: "show_widget",
                     widget_key: key,
                     portal_key: portalKey
-                }).then(() => window.location.reload());
+                }).then(() => window.location.reload()).catch(() => {});
             });
         });
 
@@ -234,12 +242,44 @@
             }
         }
 
+        function refreshMoveButtonState() {
+            const columns = Array.from(document.querySelectorAll(".dashboard-card-column"));
+            columns.forEach((column, index) => {
+                const up = column.querySelector(".widget-move-up");
+                const down = column.querySelector(".widget-move-down");
+                if (up) up.disabled = index === 0;
+                if (down) down.disabled = index === columns.length - 1;
+            });
+        }
+
         document.querySelectorAll(".widget-move-up").forEach(btn => {
-            btn.addEventListener("click", () => moveCard(btn, "up"));
+            btn.addEventListener("click", () => {
+                moveCard(btn, "up");
+                refreshMoveButtonState();
+            });
         });
         document.querySelectorAll(".widget-move-down").forEach(btn => {
-            btn.addEventListener("click", () => moveCard(btn, "down"));
+            btn.addEventListener("click", () => {
+                moveCard(btn, "down");
+                refreshMoveButtonState();
+            });
         });
+
+        searchInput?.addEventListener("input", function () {
+            const query = searchInput.value.trim().toLowerCase();
+            let visibleCount = 0;
+            document.querySelectorAll(".dashboard-card-column").forEach(column => {
+                const text = `${column.dataset.widgetTitle || ""} ${column.textContent || ""}`.toLowerCase();
+                const visible = !query || text.includes(query);
+                column.hidden = !visible;
+                if (visible) visibleCount += 1;
+            });
+            if (emptySearch && grid) {
+                emptySearch.classList.toggle("d-none", !query || visibleCount > 0);
+            }
+        });
+
+        refreshMoveButtonState();
     })();
 </script>
 {% endblock javascripts_local %}

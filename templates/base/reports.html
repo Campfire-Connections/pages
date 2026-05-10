@@ -1,0 +1,16 @@
+{% extends "base/layout.html" %}
+{% block title_text %}Reports{% endblock title_text %}
+{% block content %}
+<section class="content-card">
+    <div class="section-heading">
+        <div>
+            <h2>Reports</h2>
+            <p class="text-muted mb-0">Operational reporting tools.</p>
+        </div>
+        <a class="btn btn-outline-primary" href="{% url 'reports:builtin_index' %}">
+            <span class="fas fa-chart-bar" aria-hidden="true"></span>
+            Built-in Reports
+        </a>
+    </div>
+</section>
+{% endblock content %}

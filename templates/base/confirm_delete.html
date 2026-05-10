@@ -3,22 +3,22 @@
 {% block title_text %}{{ title|default:'Confirm Delete' }}{% endblock title_text %}
 
 {% block page_actions %}
-<a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-outline-secondary">
-    <span class="fas fa-arrow-left"></span>
+<a href="{% block cancel_url %}{{ request.META.HTTP_REFERER|default:'/' }}{% endblock cancel_url %}" class="btn btn-outline-secondary">
+    <span class="fas fa-arrow-left" aria-hidden="true"></span>
     Cancel
 </a>
 {% endblock page_actions %}
 
 {% block content %}
 <section class="content-card">
-    <h2>{{ title|default:'Confirm Delete' }}</h2>
-    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <h2>{% block confirm_title %}{{ title|default:'Confirm Delete' }}{% endblock confirm_title %}</h2>
+    <p>{% block confirm_message %}Are you sure you want to delete "{{ object }}"?{% endblock confirm_message %}</p>
 
     <form method="post" class="app-form">
         {% csrf_token %}
         <div class="form-actions">
-            <button type="submit" class="btn btn-danger">Delete</button>
-            <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger">{% block confirm_button %}Delete{% endblock confirm_button %}</button>
+            <a href="{% block cancel_url_bottom %}{{ request.META.HTTP_REFERER|default:'/' }}{% endblock cancel_url_bottom %}" class="btn btn-outline-secondary">Cancel</a>
         </div>
     </form>
 </section>

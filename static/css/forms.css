@@ -22,6 +22,20 @@
     color: var(--text);
 }
 
+.form-error-summary {
+    outline: none;
+}
+
+.form-error-summary ul {
+    margin: 8px 0 0;
+    padding-left: 1.25rem;
+}
+
+.required-marker {
+    color: #b91c1c;
+    margin-left: 2px;
+}
+
 /* Form Labels */
 label {
     display: block;
@@ -35,6 +49,11 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="number"],
+input[type="url"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+input[type="search"],
 textarea,
 select {
     width: 100%;
@@ -53,6 +72,11 @@ input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="number"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="search"]:focus,
 textarea:focus,
 select:focus {
     border-color: var(--accent);
@@ -82,13 +106,29 @@ input[type="submit"]:disabled {
 }
 
 /* Validation Success */
-input:valid {
+.field.is-valid input,
+.field.is-valid textarea,
+.field.is-valid select {
     border-color: #28a745;
 }
 
 /* Validation Error */
-input:invalid {
+input[aria-invalid="true"],
+.field:has(.error) input,
+.field:has(.error) textarea,
+.field:has(.error) select {
     border-color: #d9534f;
+}
+
+.field .error {
+    color: #b91c1c;
+    font-size: 0.9rem;
+    margin-top: -10px;
+    margin-bottom: 12px;
+}
+
+.field:has(.error) label {
+    color: #b91c1c;
 }
 
 /* Checkboxes and Radio Buttons */
@@ -112,9 +152,11 @@ input[type="radio"] {
 /* Disabled Fields */
 input[disabled],
 textarea[disabled],
-select[disabled] {
-    background-color: #e9ecef;
+select[disabled],
+button[disabled] {
+    background-color: var(--bg);
     cursor: not-allowed;
+    opacity: 0.75;
 }
 
 /* Form Fieldsets */
@@ -155,6 +197,15 @@ legend {
     button {
         font-size: 14px;
         padding: 8px 12px;
+    }
+
+    .form-actions {
+        display: grid;
+        gap: 8px;
+    }
+
+    .form-actions .btn {
+        width: 100%;
     }
 }
 .objectButtonsBottom {
@@ -255,6 +306,11 @@ td.formLabel {
 .theme-dark input[type="email"],
 .theme-dark input[type="password"],
 .theme-dark input[type="number"],
+.theme-dark input[type="url"],
+.theme-dark input[type="tel"],
+.theme-dark input[type="date"],
+.theme-dark input[type="time"],
+.theme-dark input[type="search"],
 .theme-dark textarea,
 .theme-dark select {
     background-color: var(--card);

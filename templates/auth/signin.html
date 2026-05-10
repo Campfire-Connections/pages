@@ -2,16 +2,29 @@
 {% extends 'base/layout.html' %}
 
 {% block title %}Sign In{% endblock %}
+{% block title_text %}Sign In{% endblock title_text %}
 
 {% block content %}
-<div class="signin-container">
-    <form action="{% url 'login' %}" method="post">
+<section class="content-card form-card">
+    <form action="{% url 'login' %}" method="post" class="app-form" novalidate>
         {% csrf_token %}
-        <h2>Sign In</h2>
-        {{ form.as_p }}
-        <div>
-            <button type="submit">Sign In</button>
+        <div class="form-card-header">
+            <div>
+                <h2>Sign In</h2>
+            </div>
+        </div>
+        {% for field in form %}
+            <div class="field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Sign In</button>
         </div>
     </form>
-</div>
+</section>
 {% endblock %}

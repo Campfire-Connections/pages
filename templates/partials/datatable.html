@@ -1,6 +1,7 @@
 <!-- partials/datatable.html -->
 {% load static %}
-<table id="{{ table_id }}-table" class="display" style="width:100%">
+<div class="table-shell" tabindex="0">
+<table id="{{ table_id }}-table" class="display datatable">
     <thead>
         <tr>
             {% for header in table.headers %}
@@ -26,10 +27,14 @@
         {% endif %}
     </tbody>
 </table>
+</div>
 
 <script>
-    $(document).ready(function() {
-        $('#{{ table_id }}-table').DataTable({
+    document.addEventListener("DOMContentLoaded", function() {
+        if (!window.jQuery || !jQuery.fn.DataTable) {
+            return;
+        }
+        jQuery('#{{ table_id }}-table').DataTable({
             "paging": true,
             "searching": true,
             "ordering": true,

@@ -6,6 +6,9 @@
                 {% if item.subtitle %}
                     <div class="text-muted small">{{ item.subtitle }}</div>
                 {% endif %}
+                {% if item.description %}
+                    <div class="text-muted small">{{ item.description }}</div>
+                {% endif %}
                 {% if item.url %}
                     <div class="mt-1">
                         <a class="btn btn-link p-0" href="{{ item.url }}">View</a>

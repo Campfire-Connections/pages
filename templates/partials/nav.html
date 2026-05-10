@@ -12,40 +12,58 @@
     </div>
 
     {% if user.is_authenticated %}
-    <div class="nav-section">
-        <div class="nav-links">
+    <div class="nav-search">
+        <label class="visually-hidden" for="navSearchInput">Filter navigation</label>
+        <span class="fas fa-search" aria-hidden="true"></span>
+        <input id="navSearchInput" type="search" placeholder="Filter navigation" autocomplete="off">
+    </div>
+    <div class="nav-section nav-primary-section" aria-labelledby="primaryNavigationLabel">
+        <div class="nav-section-title" id="primaryNavigationLabel">Navigation</div>
+        <div class="nav-links" id="navLinks">
         {% for item in menu_items %}
             {% if item.children %}
                 <div class="nav-group" data-open="false">
-                    <button class="nav-group-toggle" aria-expanded="false">
-                        {% if item.icon %}<span class="{{ item.icon }} nav-icon"></span>&nbsp;{% endif %}
+                    <button class="nav-group-toggle" aria-expanded="false" aria-controls="navGroup{{ forloop.counter }}" type="button">
+                        {% if item.icon %}<span class="{{ item.icon }} nav-icon" aria-hidden="true"></span>{% endif %}
                         <span class="nav-text">{{ item.label|default_if_none:""|nbsp }}</span>
-                        <span class="fas fa-chevron-down caret"></span>
+                        <span class="fas fa-chevron-down caret" aria-hidden="true"></span>
                     </button>
-                    <div class="nav-group-children">
+                    <div class="nav-group-children" id="navGroup{{ forloop.counter }}">
                         {% for child in item.children %}
                             {% if child.separator %}
                                 <div role="separator" class="nav-separator"></div>
-                            {% else %}
-                                <a class="nav-link is-child" href="{{ child.url|default:'#' }}" data-menu-key="{{ child.key }}">
-                                    {% if child.icon %}<span class="{{ child.icon }} nav-icon"></span>&nbsp;{% endif %}
+                            {% elif child.url %}
+                                <a class="nav-link is-child{% if request.path == child.url %} is-active{% endif %}" href="{{ child.url }}" data-menu-key="{{ child.key }}"{% if request.path == child.url %} aria-current="page"{% endif %}>
+                                    {% if child.icon %}<span class="{{ child.icon }} nav-icon" aria-hidden="true"></span>{% endif %}
                                     <span class="nav-text">{{ child.label|default_if_none:""|nbsp }}</span>
                                 </a>
+                            {% else %}
+                                <span class="nav-link is-child is-disabled" data-menu-key="{{ child.key }}" aria-disabled="true">
+                                    {% if child.icon %}<span class="{{ child.icon }} nav-icon" aria-hidden="true"></span>{% endif %}
+                                    <span class="nav-text">{{ child.label|default_if_none:""|nbsp }}</span>
+                                </span>
                             {% endif %}
                         {% endfor %}
                     </div>
                 </div>
-            {% else %}
-                <a class="nav-link" href="{{ item.url|default:'#' }}" data-menu-key="{{ item.key }}">
-                    {% if item.icon %}<span class="{{ item.icon }} nav-icon"></span>&nbsp;{% endif %}
+            {% elif item.url %}
+                <a class="nav-link{% if request.path == item.url %} is-active{% endif %}" href="{{ item.url }}" data-menu-key="{{ item.key }}"{% if request.path == item.url %} aria-current="page"{% endif %}>
+                    {% if item.icon %}<span class="{{ item.icon }} nav-icon" aria-hidden="true"></span>{% endif %}
                     <span class="nav-text">{{ item.label|default_if_none:""|nbsp }}</span>
                 </a>
+            {% else %}
+                <span class="nav-link is-disabled" data-menu-key="{{ item.key }}" aria-disabled="true">
+                    {% if item.icon %}<span class="{{ item.icon }} nav-icon" aria-hidden="true"></span>{% endif %}
+                    <span class="nav-text">{{ item.label|default_if_none:""|nbsp }}</span>
+                </span>
             {% endif %}
         {% endfor %}
+            <div class="nav-empty-results" hidden>No matching navigation items.</div>
         </div>
     </div>
 
-    <div class="nav-section user-section">
+    <div class="nav-section user-section" aria-labelledby="accountNavigationLabel">
+        <div class="nav-section-title" id="accountNavigationLabel">Account</div>
         <div class="nav-user">
             <div class="avatar">
                 <img src="{% static 'images/avatar/default.png' %}" alt="User avatar">
@@ -56,28 +74,60 @@
             </div>
         </div>
         <div class="nav-actions">
-            <a class="nav-link subtle" href="{% url 'account_settings' %}"><span class="fas fa-cog nav-icon"></span><span class="nav-text">Settings</span></a>
-            <a class="nav-link subtle" href="#" onclick="document.getElementById('logout-form').submit(); return false;"><span class="fa fa-sign-out nav-icon"></span><span class="nav-text">Sign Out</span></a>
-            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none;">{% csrf_token %}</form>
+            <a class="nav-link subtle{% if request.resolver_match.url_name == 'account_settings' %} is-active{% endif %}" href="{% url 'account_settings' %}"{% if request.resolver_match.url_name == 'account_settings' %} aria-current="page"{% endif %}><span class="fas fa-cog nav-icon" aria-hidden="true"></span><span class="nav-text">Settings</span></a>
+            <button class="nav-link subtle nav-button" type="submit" form="logout-form"><span class="fa fa-sign-out nav-icon" aria-hidden="true"></span><span class="nav-text">Sign Out</span></button>
+            <form id="logout-form" action="{% url 'logout' %}" method="post" hidden>{% csrf_token %}</form>
         </div>
+    </div>
+    {% else %}
+    <div class="nav-section anonymous-nav" aria-labelledby="accessNavigationLabel">
+        <div class="nav-section-title" id="accessNavigationLabel">Access</div>
+        <a class="nav-link{% if request.resolver_match.url_name == 'login' %} is-active{% endif %}" href="{% url 'login' %}"{% if request.resolver_match.url_name == 'login' %} aria-current="page"{% endif %}><span class="fas fa-sign-in-alt nav-icon" aria-hidden="true"></span><span class="nav-text">Log In</span></a>
+        <a class="nav-link{% if request.resolver_match.url_name == 'register' %} is-active{% endif %}" href="{% url 'register' %}"{% if request.resolver_match.url_name == 'register' %} aria-current="page"{% endif %}><span class="fas fa-user-plus nav-icon" aria-hidden="true"></span><span class="nav-text">Request Access</span></a>
     </div>
     {% endif %}
 </div>
 
-{% if user.is_authenticated %}
 <script>
 (function () {
     const rail = document.querySelector(".app-rail");
     const nav = document.querySelector(".nav-shell");
     const toggleButton = document.getElementById("railToggle");
     const mobileToggleButton = document.getElementById("mobileRailToggle");
+    const navSearchInput = document.getElementById("navSearchInput");
+    const navLinks = document.getElementById("navLinks");
+    const emptyResults = document.querySelector(".nav-empty-results");
     const body = document.body;
+    const storageKey = "cf.railCollapsed";
+
+    if (!rail || !nav || !body) {
+        return;
+    }
+
+    function storageGet(key) {
+        try {
+            return window.localStorage.getItem(key);
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function storageSet(key, value) {
+        try {
+            window.localStorage.setItem(key, value);
+        } catch (error) {
+            return;
+        }
+    }
 
     nav.addEventListener("click", function (event) {
         const groupToggle = event.target.closest(".nav-group-toggle");
         if (groupToggle) {
             event.preventDefault();
             const group = groupToggle.closest(".nav-group");
+            if (!group) {
+                return;
+            }
             const open = group.getAttribute("data-open") === "true";
             group.setAttribute("data-open", open ? "false" : "true");
             groupToggle.setAttribute("aria-expanded", open ? "false" : "true");
@@ -87,7 +137,13 @@
     function setCollapsed(shouldCollapse) {
         rail.setAttribute("data-collapsed", shouldCollapse ? "true" : "false");
         body.classList.toggle("rail-collapsed", shouldCollapse);
-        localStorage.setItem("cf.railCollapsed", shouldCollapse ? "true" : "false");
+        if (mobileToggleButton) {
+            mobileToggleButton.setAttribute("aria-expanded", shouldCollapse ? "true" : "false");
+        }
+        if (toggleButton) {
+            toggleButton.setAttribute("aria-expanded", shouldCollapse ? "false" : "true");
+        }
+        storageSet(storageKey, shouldCollapse ? "true" : "false");
     }
 
     function toggleRail() {
@@ -95,23 +151,72 @@
         setCollapsed(!collapsed);
     }
 
-    if (rail) {
-        if (toggleButton) {
-            toggleButton.addEventListener("click", toggleRail);
+    if (toggleButton) {
+        toggleButton.setAttribute("aria-expanded", "true");
+        toggleButton.addEventListener("click", toggleRail);
+    }
+    if (mobileToggleButton) {
+        mobileToggleButton.setAttribute("aria-expanded", "false");
+        mobileToggleButton.addEventListener("click", toggleRail);
+    }
+    rail.addEventListener("click", function (event) {
+        const link = event.target.closest("a.nav-link");
+        if (link && window.matchMedia("(max-width: 1024px)").matches) {
+            setCollapsed(false);
         }
-        if (mobileToggleButton) {
-            mobileToggleButton.addEventListener("click", toggleRail);
+    });
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && window.matchMedia("(max-width: 1024px)").matches) {
+            setCollapsed(false);
         }
-        rail.addEventListener("click", function (event) {
-            const link = event.target.closest("a.nav-link");
-            if (link && window.matchMedia("(max-width: 1024px)").matches) {
-                setCollapsed(false);
+    });
+
+    if (navSearchInput && navLinks) {
+        navLinks.querySelectorAll(".nav-link.is-active").forEach(function (activeLink) {
+            const group = activeLink.closest(".nav-group");
+            if (!group) {
+                return;
+            }
+            group.setAttribute("data-open", "true");
+            group.classList.add("has-active-child");
+            const toggle = group.querySelector(".nav-group-toggle");
+            if (toggle) {
+                toggle.setAttribute("aria-expanded", "true");
             }
         });
-        const saved = localStorage.getItem("cf.railCollapsed");
-        const shouldCollapse = saved === "true";
-        setCollapsed(shouldCollapse);
+
+        navSearchInput.addEventListener("input", function () {
+            const query = navSearchInput.value.trim().toLowerCase();
+            let visibleLinks = 0;
+
+            navLinks.querySelectorAll(".nav-link").forEach(function (link) {
+                const matches = !query || link.textContent.toLowerCase().includes(query);
+                link.hidden = !matches;
+                if (matches) {
+                    visibleLinks += 1;
+                    const group = link.closest(".nav-group");
+                    if (group && query) {
+                        group.setAttribute("data-open", "true");
+                        const toggle = group.querySelector(".nav-group-toggle");
+                        if (toggle) {
+                            toggle.setAttribute("aria-expanded", "true");
+                        }
+                    }
+                }
+            });
+
+            navLinks.querySelectorAll(".nav-group").forEach(function (group) {
+                const hasVisibleChild = !!group.querySelector(".nav-link:not([hidden])");
+                const groupLabel = group.querySelector(".nav-group-toggle")?.textContent.toLowerCase() || "";
+                group.hidden = query && !hasVisibleChild && !groupLabel.includes(query);
+            });
+
+            if (emptyResults) {
+                emptyResults.hidden = !query || visibleLinks > 0;
+            }
+        });
     }
+
+    setCollapsed(storageGet(storageKey) === "true");
 })();
 </script>
-{% endif %}

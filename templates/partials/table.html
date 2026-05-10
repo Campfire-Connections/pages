@@ -2,13 +2,16 @@
 {% load static %}
 {% load my_filters %}
 
-<table>
+<div class="table-shell" tabindex="0">
+<table class="table table-striped table-bordered">
     <thead>
         <tr>
             {% for header in table.headers %}
                 <th>{{ header }}</th>
             {% endfor %}
-                <th class="actions">Actions|{{table.headers.count}}</th>
+            {% if table.actions %}
+                <th class="actions">Actions</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -19,20 +22,30 @@
                 <td>{{ cell }}</td>
             {% endfor %}
 
+            {% if table.actions %}
             <td class="actions">
-                test
                 {% for action in table.actions %}
-                <a href="#" alt="{{action.name}}"><i class="{{ action.icon }}"></i></a>
+                    {% if action.url %}
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ action.url }}" aria-label="{{ action.name }}">
+                        <i class="{{ action.icon }}" aria-hidden="true"></i>
+                    </a>
+                    {% else %}
+                    <button class="btn btn-sm btn-outline-secondary" type="button" disabled aria-label="{{ action.name }}">
+                        <i class="{{ action.icon }}" aria-hidden="true"></i>
+                    </button>
+                    {% endif %}
                 {% endfor %}
             </td>
+            {% endif %}
         </tr>
         {% endfor %}
     {% else %}
         <tr>
-            <td colspan="{{ table.headers|length }}">
+            <td colspan="99">
                 <i>None found.</i>
             </td>
         </tr>
     {% endif %}
     </tbody>
 </table>
+</div>

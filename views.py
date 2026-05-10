@@ -41,6 +41,18 @@ def save_layout(request):
         "portal"
     )
 
+    if portal_key is not None and not isinstance(portal_key, str):
+        return JsonResponse(
+            {"status": "error", "message": "Invalid portal key"},
+            status=400,
+        )
+
+    if widget_key is not None and not isinstance(widget_key, str):
+        return JsonResponse(
+            {"status": "error", "message": "Invalid widget key"},
+            status=400,
+        )
+
     layout, _ = DashboardLayout.objects.get_or_create(
         user=user, portal_key=portal_key or "default"
     )
@@ -61,10 +73,14 @@ def save_layout(request):
 
     layout_data = data.get("layout")
     if layout_data is not None:
-        if isinstance(layout_data, list):
-            layout.layout = json.dumps(layout_data)
-        else:
-            layout.layout = layout_data
+        if not isinstance(layout_data, list) or not all(
+            isinstance(item, str) for item in layout_data
+        ):
+            return JsonResponse(
+                {"status": "error", "message": "Invalid layout payload"},
+                status=400,
+            )
+        layout.layout = json.dumps(layout_data[:100])
         layout.save()
         return JsonResponse({"status": "success"})
 

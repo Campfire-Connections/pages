@@ -233,6 +233,67 @@
   padding: 18px;
 }
 
+.object-header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin-bottom: var(--space-12);
+}
+
+.object-title-group {
+  min-width: 0;
+  flex: 1;
+}
+
+.object-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  max-width: 100%;
+}
+
+.object-actions .btn,
+.object-actions .dropdown {
+  min-width: 0;
+}
+
+.object-kicker {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.object-subtitle {
+  color: var(--muted);
+  font-size: 1rem;
+  margin-top: var(--space-4);
+}
+
+.object-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: var(--space-8);
+}
+
+.object-tab-content {
+  display: flex;
+  width: 100%;
+}
+
+.object-description {
+  overflow: hidden;
+  width: 100%;
+}
+
+.object-description .readmore {
+  max-height: none;
+}
+
 .object > .card-header h1 {
   margin: 0;
   font-size: 24px;
@@ -282,6 +343,15 @@ div#page {
 .objectNav {
   box-sizing: unset;
   margin: 20px 0 -19px;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.objectNav .nav-tabs {
+  flex-wrap: nowrap;
+  min-width: max-content;
 }
 
 .column1 .objectNav {
@@ -363,9 +433,27 @@ div#page {
 }
 .tab-pane {
   width: 100%;
+  min-width: 0;
 }
 
 .object .field-value,
 .object .readmore {
   color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .object-header {
+    display: grid;
+  }
+
+  .object-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .object-actions .btn,
+  .object-actions .dropdown,
+  .object-actions .dropdown > .btn {
+    width: 100%;
+  }
 }

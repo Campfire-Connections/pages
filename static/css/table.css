@@ -21,11 +21,18 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    min-width: 680px;
+}
+
+table.datatable {
+    width: 100%;
 }
 
 table th, table td {
     border: 1px solid var(--border);
     padding: 8px;
+    vertical-align: top;
+    overflow-wrap: anywhere;
 }
 
 table th {
@@ -33,7 +40,8 @@ table th {
 }
 
 .actions {
-    max-width: 20px;
+    width: 1%;
+    white-space: nowrap;
 }
 /* Styling for table headers */
 table thead th {
@@ -55,6 +63,11 @@ table thead th a:hover {
 /* Optional: Add hover effect on table rows */
 table tbody tr:hover {
     background-color: rgba(234, 105, 0, 0.08);
+}
+
+table a,
+.table a {
+    text-underline-offset: 2px;
 }
 
 /* Optional: Style the table rows for consistent look */
@@ -121,6 +134,10 @@ table tbody tr {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    table {
+        min-width: 620px;
+    }
+
     .pagination a {
         padding: 8px 12px; /* Reduce padding for smaller screens */
         font-size: 0.9rem; /* Slightly smaller text */

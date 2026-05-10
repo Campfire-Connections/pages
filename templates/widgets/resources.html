@@ -6,6 +6,9 @@
                 {% if item.subtitle %}
                     <div class="text-muted small">{{ item.subtitle }}</div>
                 {% endif %}
+                {% if item.description %}
+                    <div class="text-muted small">{{ item.description }}</div>
+                {% endif %}
             </a>
         {% endfor %}
     {% else %}

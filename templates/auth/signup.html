@@ -1,52 +1,74 @@
 <!-- register.html -->
 {% extends 'base/layout.html' %}
 
-{% block content %}
-<script>
-    function updateUserTypeFields() {
-        var userType = document.getElementById("id_user_type").value;
-        // Show/hide additional fields based on user type
-        document.getElementById("additional_fields_leader").style.display = userType === 'LEADER' ? 'block' : 'none';
-        document.getElementById("additional_fields_attendee").style.display = userType === 'ATTENDEE' ? 'block' : 'none';
-        document.getElementById("additional_fields_faculty").style.display = userType === 'FACULTY' ? 'block' : 'none';
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById("id_user_type").addEventListener('change', updateUserTypeFields);
-        updateUserTypeFields(); // Call on initial load
-    });
-</script>
+{% block title_text %}Request Access{% endblock title_text %}
 
-<form method="post" action="{% url 'register' %}">
+{% block content %}
+<section class="content-card form-card">
+<form method="post" action="{% url 'register' %}" class="app-form" novalidate>
     {% csrf_token %}
-    {{form.as_p }}
+    <div class="form-card-header">
+        <div>
+            <h2>Request Access</h2>
+        </div>
+    </div>
+
+    {% for field in form %}
+        <div class="field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    {% if address_form %}
     <fieldset>
         <legend>Address</legend>
-        {{ address_form.as_p }}
+        {{ address_form }}
     </fieldset>
-    <div id="additional_fields_leader" style="display:none;">
-        <!-- Additional fields for Leader -->
-        <fieldset>
-            <legend>Details</legend>
-            {{ leader_form.as_p }}
-        </fieldset>
-    </div>
-    <div id="additional_fields_attendee" style="display:none;">
-        <!-- Additional fields for Attendee -->
-        <fieldset>
-            <legend>Details</legend>
-            {{ attendee_form.as_p }}
-        </fieldset>
-    </div>
-    <div id="additional_fields_faculty" style="display:none;">
-        <!-- Additional fields for Faculty -->
-        <fieldset>
-            <legend>Details</legend>
-            {{ faculty_form.as_p }}
-        </fieldset>
-    </div>
-    <div>
+    {% endif %}
 
-        <input type="submit" value="Register" />
+    <div id="additional_fields_leader" hidden>
+        <fieldset>
+            <legend>Leader Details</legend>
+            {{ leader_form }}
+        </fieldset>
+    </div>
+    <div id="additional_fields_attendee" hidden>
+        <fieldset>
+            <legend>Attendee Details</legend>
+            {{ attendee_form }}
+        </fieldset>
+    </div>
+    <div id="additional_fields_faculty" hidden>
+        <fieldset>
+            <legend>Faculty Details</legend>
+            {{ faculty_form }}
+        </fieldset>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Register</button>
     </div>
 </form>
+</section>
 {% endblock %}
+
+{% block javascripts_local %}
+{{ block.super }}
+<script>
+    function updateUserTypeFields() {
+        const typeField = document.getElementById("id_user_type");
+        if (!typeField) return;
+        const userType = typeField.value;
+        document.getElementById("additional_fields_leader")?.toggleAttribute("hidden", userType !== "LEADER");
+        document.getElementById("additional_fields_attendee")?.toggleAttribute("hidden", userType !== "ATTENDEE");
+        document.getElementById("additional_fields_faculty")?.toggleAttribute("hidden", userType !== "FACULTY");
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("id_user_type")?.addEventListener("change", updateUserTypeFields);
+        updateUserTypeFields();
+    });
+</script>
+{% endblock javascripts_local %}
