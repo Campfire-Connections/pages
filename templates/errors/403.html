@@ -1,0 +1,23 @@
+{% extends "base/layout.html" %}
+
+{% block title %}Access Denied{% endblock %}
+{% block title_text %}Access Denied{% endblock title_text %}
+
+{% block page_actions %}
+<a class="btn btn-outline-secondary" href="{% url 'dashboard' %}">
+    <span class="fas fa-arrow-left" aria-hidden="true"></span>
+    Dashboard
+</a>
+{% endblock page_actions %}
+
+{% block content %}
+<section class="content-card">
+    <div class="section-heading">
+        <div>
+            <h2>Access Denied</h2>
+            <p class="text-muted mb-0">Your account does not have permission to open this workspace.</p>
+        </div>
+    </div>
+    <p>Use a facility admin or department admin account for faculty management, or return to your dashboard for the tools available to your role.</p>
+</section>
+{% endblock content %}

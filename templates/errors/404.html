@@ -5,8 +5,12 @@
 
 {% block content %}
 <section class="content-card">
-    <h1>Page Not Found</h1>
-    <p class="text-muted">The page you requested does not exist or moved.</p>
-    <a class="btn btn-primary" href="{% url 'home' %}">Go Home</a>
+    <div class="section-heading">
+        <div>
+            <h2>Page Not Found</h2>
+            <p class="text-muted mb-0">The page you requested does not exist or moved.</p>
+        </div>
+    </div>
+    <a class="btn btn-primary" href="{% url 'dashboard' %}">Go To Dashboard</a>
 </section>
 {% endblock %}
