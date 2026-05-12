@@ -1,5 +1,30 @@
-{% extends 'base/layout.html' %}
+{% extends "base/layout.html" %}
 
+{% block title_text %}Help{% endblock title_text %}
 {% block content %}
-<h1>Help</h1>
+<section class="content-card">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Help</p>
+            <h2>Workflow reference</h2>
+        </div>
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'resources' %}">
+            <span class="fas fa-book" aria-hidden="true"></span>
+            Resources
+        </a>
+    </div>
+
+    <div class="content-grid">
+        {% for section in help_sections %}
+            <section class="metric-card" aria-labelledby="help-section-{{ forloop.counter }}">
+                <h3 id="help-section-{{ forloop.counter }}">{{ section.title }}</h3>
+                <ul class="mb-0">
+                    {% for item in section.items %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endfor %}
+    </div>
+</section>
 {% endblock content %}

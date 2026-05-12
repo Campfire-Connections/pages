@@ -2,9 +2,37 @@
 {% block title_text %}Resources{% endblock title_text %}
 {% block content %}
 <section class="content-card">
-    <div class="empty-state">
-        <span class="fas fa-book" aria-hidden="true"></span>
-        <p>No resources have been published yet.</p>
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Workspace Resources</p>
+            <h2>Operational links</h2>
+        </div>
+        <p>Role-aware shortcuts for daily camp, faction, and enrollment work.</p>
     </div>
+
+    {% for section in resource_sections %}
+        <section class="content-stack" aria-labelledby="resource-section-{{ forloop.counter }}">
+            <div class="section-heading">
+                <div>
+                    <h3 id="resource-section-{{ forloop.counter }}">{{ section.title }}</h3>
+                    <p>{{ section.description }}</p>
+                </div>
+            </div>
+            <div class="dashboard-quick-grid">
+                {% for item in section.items %}
+                    <a class="quick-card" href="{{ item.url }}">
+                        <span class="quick-card-icon fas {{ item.icon }}" aria-hidden="true"></span>
+                        <span class="quick-card-title">{{ item.label }}</span>
+                        <span class="quick-card-meta">{{ item.description }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+    {% empty %}
+        <div class="empty-state">
+            <span class="fas fa-book" aria-hidden="true"></span>
+            <p>No resources are available for this account.</p>
+        </div>
+    {% endfor %}
 </section>
 {% endblock content %}

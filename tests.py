@@ -6,7 +6,8 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from core.models.dashboard import DashboardLayout
 from core.models.navigation import NavigationPreference
-from core.tests import mute_profile_signals
+from core.tests import BaseDomainTestCase, mute_profile_signals
+from facility.models.faculty import FacultyProfile
 from organization.models import Organization
 
 User = get_user_model()
@@ -17,6 +18,65 @@ class PagesViewTests(TestCase):
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Campfire Connections")
+
+
+class ResourceAndHelpViewTests(BaseDomainTestCase):
+    def test_resources_show_public_entries_for_anonymous_users(self):
+        response = self.client.get(reverse("resources"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Get Started")
+        self.assertContains(response, "Request Access")
+        self.assertNotContains(response, "Admin Portal")
+
+    def test_resources_show_admin_operational_links(self):
+        user = User.objects.create_user(
+            username="resource.admin",
+            password="pass1234",
+            user_type=User.UserType.ADMIN,
+            is_admin=True,
+        )
+        self.client.force_login(user)
+
+        response = self.client.get(reverse("resources"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Administration")
+        self.assertContains(response, "Facilities")
+        self.assertContains(response, "Enrollment Windows")
+
+    def test_resources_show_facility_context_for_faculty(self):
+        with mute_profile_signals():
+            user = User.objects.create_user(
+                username="resource.faculty",
+                password="pass1234",
+                user_type=User.UserType.FACULTY,
+            )
+        FacultyProfile.objects.create(
+            user=user,
+            organization=self.organization,
+            facility=self.facility,
+            role=FacultyProfile.FacultyRole.STAFF,
+        )
+        self.client.force_login(user)
+
+        response = self.client.get(reverse("resources"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Facility")
+        self.assertContains(response, "My Faculty Enrollments")
+        self.assertContains(
+            response,
+            f"/facilities/{self.facility.slug}/faculty/{user.get_profile().slug}/enrollments/",
+        )
+
+    def test_help_shows_role_workflow_reference(self):
+        response = self.client.get(reverse("help"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Workflow reference")
+        self.assertContains(response, "Enrollment")
+        self.assertContains(response, "faction chain")
 
 
 class SaveLayoutViewTests(TestCase):

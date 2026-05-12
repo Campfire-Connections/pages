@@ -902,7 +902,12 @@ body.app-shell.splash-page .app-content {
     border-radius: var(--r-8);
     box-shadow: var(--shadow-soft);
     color: var(--text);
+    min-width: 0;
     padding: var(--space-12);
+}
+
+.manage-section .table-shell {
+    min-width: 0;
 }
 
 .manage-section-header {
