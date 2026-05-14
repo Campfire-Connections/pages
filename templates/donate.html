@@ -1,7 +1,7 @@
-{% extends 'base/layout.html' %}
+{% extends "base/layout.html" %}
 {% load static %}
 
-{% block title_text %}Donate!{% endblock title_text %}
+{% block title_text %}Support{% endblock title_text %}
 
 {% block stylesheets_local %}
 {{ block.super }}
@@ -9,31 +9,55 @@
 {% endblock stylesheets_local %}
 
 {% block content %}
-<section class="content-card form-card">
-    <form class="app-form">
-        <div class="form-card-header">
-            <div>
-                <h2>Donate To Campfire Connections</h2>
-                <p class="text-muted mb-0">Support continued development and camp operations.</p>
+<section class="content-card">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Support</p>
+            <h2>Help camp teams stay coordinated</h2>
+        </div>
+        <a class="btn btn-outline-secondary" href="{% url 'about' %}">
+            <span class="fas fa-info-circle" aria-hidden="true"></span>
+            About
+        </a>
+    </div>
+
+    <div class="content-grid">
+        <section class="metric-card">
+            <span class="stat-chip"><span class="fas fa-code" aria-hidden="true"></span> Product Work</span>
+            <p class="mb-0">Support development of camp-ready registration, roster, schedule, and reporting workflows.</p>
+        </section>
+        <section class="metric-card">
+            <span class="stat-chip"><span class="fas fa-shield-alt" aria-hidden="true"></span> Hardening</span>
+            <p class="mb-0">Fund browser QA, template audits, permission reviews, and data integrity work.</p>
+        </section>
+    </div>
+
+    <section class="form-card mt-3">
+        <form class="app-form" method="get" action="{% url 'donate' %}">
+            <div class="form-card-header">
+                <div>
+                    <h3>Support Request</h3>
+                    <p class="text-muted mb-0">Share contact details and the support level your team wants to discuss.</p>
+                </div>
             </div>
-        </div>
 
-        <div class="field">
-            <label for="donor-name">Name</label>
-            <input id="donor-name" type="text" name="name" />
-        </div>
-        <div class="field">
-            <label for="donor-email">Email</label>
-            <input id="donor-email" type="email" name="email" />
-        </div>
-        <div class="field">
-            <label for="donation-amount">Amount</label>
-            <input id="donation-amount" type="number" name="amount" min="1" />
-        </div>
+            <div class="field">
+                <label for="donor-name">Name</label>
+                <input id="donor-name" type="text" name="name" autocomplete="name" />
+            </div>
+            <div class="field">
+                <label for="donor-email">Email</label>
+                <input id="donor-email" type="email" name="email" autocomplete="email" />
+            </div>
+            <div class="field">
+                <label for="donation-amount">Target Amount</label>
+                <input id="donation-amount" type="number" name="amount" min="1" inputmode="decimal" />
+            </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Donate</button>
-        </div>
-    </form>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Prepare Request</button>
+            </div>
+        </form>
+    </section>
 </section>
 {% endblock content %}

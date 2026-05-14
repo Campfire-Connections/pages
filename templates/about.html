@@ -1,13 +1,37 @@
-{% extends 'base/layout.html' %}
+{% extends "base/layout.html" %}
 
 {% block title_text %}About Us{% endblock title_text %}
 
 {% block content %}
 <section class="content-card">
-    <h2>About Campfire Connections</h2>
-    <p class="text-muted mb-0">
-        Campfire Connections helps camp teams coordinate organizations, facilities,
-        factions, courses, enrollments, staffing, and reporting from one shared workspace.
-    </p>
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Campfire Connections</p>
+            <h2>Camp operations in one workspace</h2>
+        </div>
+        <a class="btn btn-outline-primary" href="{% url 'resources' %}">
+            <span class="fas fa-book" aria-hidden="true"></span>
+            Resources
+        </a>
+    </div>
+
+    <div class="dashboard-quick-grid" aria-label="Core platform areas">
+        <article class="metric-card">
+            <span class="stat-chip"><span class="fas fa-sitemap" aria-hidden="true"></span> Organizations</span>
+            <p class="mb-0">Councils, districts, and camp ownership stay connected through hierarchy-aware records.</p>
+        </article>
+        <article class="metric-card">
+            <span class="stat-chip"><span class="fas fa-campground" aria-hidden="true"></span> Facilities</span>
+            <p class="mb-0">Facilities coordinate quarters, departments, faculty, classes, and active sessions.</p>
+        </article>
+        <article class="metric-card">
+            <span class="stat-chip"><span class="fas fa-users" aria-hidden="true"></span> Factions</span>
+            <p class="mb-0">Faction leaders manage roster context while attendees can stay scoped to their assignments.</p>
+        </article>
+        <article class="metric-card">
+            <span class="stat-chip"><span class="fas fa-chart-line" aria-hidden="true"></span> Reporting</span>
+            <p class="mb-0">Operational reports summarize enrollment, roster, and schedule information for camp teams.</p>
+        </article>
+    </div>
 </section>
 {% endblock content %}

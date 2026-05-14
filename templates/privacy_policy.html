@@ -1,14 +1,37 @@
-{% extends 'base/layout.html' %}
+{% extends "base/layout.html" %}
 
 {% block title_text %}Privacy Policy{% endblock title_text %}
 
 {% block content %}
 <section class="content-card">
-    <h2>Privacy Policy</h2>
-    <p class="text-muted mb-0">
-        This project stores account and enrollment information needed to operate camp
-        sessions. Replace this placeholder with the organization-approved privacy policy
-        before production launch.
-    </p>
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Privacy</p>
+            <h2>Operational data handling</h2>
+        </div>
+        <a class="btn btn-outline-secondary" href="{% url 'help' %}">
+            <span class="fas fa-circle-question" aria-hidden="true"></span>
+            Help
+        </a>
+    </div>
+
+    <div class="content-grid">
+        <section class="metric-card">
+            <h3>Information Stored</h3>
+            <p class="mb-0">Campfire Connections stores account, profile, enrollment, schedule, facility, faction, and reporting records needed to operate camp programs.</p>
+        </section>
+        <section class="metric-card">
+            <h3>Access Scope</h3>
+            <p class="mb-0">Navigation and data views are role-scoped. Faculty, leaders, attendees, and admins see records according to their facility, faction chain, or administrative role.</p>
+        </section>
+        <section class="metric-card">
+            <h3>Operational Use</h3>
+            <p class="mb-0">Stored records are used for registration, roster management, class scheduling, lodging coordination, and operational reporting.</p>
+        </section>
+        <section class="metric-card">
+            <h3>Account Control</h3>
+            <p class="mb-0">Users can review profile preferences from their account page. Administrators manage account access and role assignment for their organization.</p>
+        </section>
+    </div>
 </section>
 {% endblock content %}
